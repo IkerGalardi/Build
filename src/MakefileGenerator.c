@@ -80,6 +80,7 @@ void PBldGenerateMakefile(FILE *makefile,
     }
 
     fprintf(makefile, "CFLAGS=-Wall -Wextra\n\n");
+    fprintf(makefile, "ALL_OBJ=\n");
 
     // Add a way to rebuild the makefile if the build script has been changed.
     fprintf(makefile, "Makefile: Build.c\n");
@@ -88,5 +89,10 @@ void PBldGenerateMakefile(FILE *makefile,
 
     for (int i = 0; i < projectCount; i++) {
         PBldAddProjectToMakefile(makefile, &projects[i]);
+
+        fprintf(makefile, "ALL_OBJ+=$(%s_OBJ)\n\n", projects->projectName);
     }
+
+    fprintf(makefile, "clean:\n");
+    fprintf(makefile, "\trm -f $(ALL_OBJ)\n");
 }
