@@ -87,7 +87,7 @@ void PBldGenerateMakefile(FILE *makefile,
     fprintf(makefile, "\t$(CC) -o Build Build.c -lBuild\n");
     fprintf(makefile, "\t./Build\n\n");
 
-    for (int i = 0; i < projectCount; i++) {
+    for (size_t i = 0; i < projectCount; i++) {
         PBldAddProjectToMakefile(makefile, &projects[i]);
 
         fprintf(makefile, "ALL_OBJ+=$(%s_OBJ)\n\n", projects->projectName);
