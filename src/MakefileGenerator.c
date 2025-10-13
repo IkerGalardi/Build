@@ -49,14 +49,16 @@ void PBldAddProjectToMakefile(FILE *makefile, BldProject *project)
     fprintf(makefile, "%s_OBJ = %s\n\n", project->projectName, objNames);
     if (project->type == BLD_EXECUTABLE) {
         fprintf(makefile, "%s: $(%s_OBJ)\n", project->projectName, project->projectName);
+        fprintf(makefile, "\t$(CC) $(LDFLAGS) $(%s_OBJ) -o %s\n\n", project->projectName, project->projectName);
     } else if (project->type == BLD_DYNAMIC_LIBRARY) {
         fprintf(makefile, "lib%s.so: $(%s_OBJ)\n", project->projectName, project->projectName);
+        fprintf(makefile, "\t$(CC) -shared $(LDFLAGS) $(%s_OBJ) -o lib%s.so\n\n", project->projectName, project->projectName);
     } else if (project-> type == BLD_STATIC_LIBRARY) {
         fprintf(makefile, "lib%s.a: $(%s_OBJ)\n", project->projectName, project->projectName);
+        fprintf(makefile, "\t$(AR) rcs $(LDFLAGS) $(%s_OBJ) -o lib%s.a\n\n", project->projectName, project->projectName);
     } else {
         assert(false);
     }
-    fprintf(makefile, "\t$(CC) $(LDFLAGS) $(%s_OBJ) -o %s\n\n", project->projectName, project->projectName);
 
 }
 
