@@ -8,6 +8,8 @@
 void PBldAddProjectToMakefile(FILE *makefile, BldProject *project)
 {
     // TODO: too many allocations :S
+    assert(makefile != NULL);
+    assert(project != NULL);
 
     char *sourcesCopy = malloc(strlen(project->sources) + 1);
     strcpy(sourcesCopy, project->sources);
@@ -49,8 +51,10 @@ void PBldAddProjectToMakefile(FILE *makefile, BldProject *project)
         fprintf(makefile, "%s: $(%s_OBJ)\n", project->projectName, project->projectName);
     } else if (project->type == BLD_DYNAMIC_LIBRARY) {
         fprintf(makefile, "lib%s.so: $(%s_OBJ)\n", project->projectName, project->projectName);
-    } else {
+    } else if (project-> type == BLD_STATIC_LIBRARY) {
         fprintf(makefile, "lib%s.a: $(%s_OBJ)\n", project->projectName, project->projectName);
+    } else {
+        assert(false);
     }
     fprintf(makefile, "\t$(CC) $(LDFLAGS) $(%s_OBJ) -o %s\n\n", project->projectName, project->projectName);
 
@@ -61,6 +65,10 @@ void PBldGenerateMakefile(FILE *makefile,
                           BldProject *projects,
                           size_t projectCount)
 {
+    assert(makefile != NULL);
+    assert(defaultTarget != NULL);
+    assert(projects != NULL);
+
     if (defaultTarget->type == BLD_EXECUTABLE) {
         fprintf(makefile, "all: %s\n\n", defaultTarget->projectName);
     } else if (defaultTarget->type == BLD_DYNAMIC_LIBRARY) {

@@ -5,6 +5,7 @@
 #include <stdarg.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <assert.h>
 
 #include "Generators.h"
 
@@ -15,6 +16,7 @@ BldProject *BldNewProject(char *projectName,
                           BldProjectType type,
                           BldLanguage language)
 {
+    assert(projectIndex < 100);
     BldProject *project = &projects[projectIndex];
     projectIndex++;
 
@@ -32,6 +34,8 @@ void PBldAddSources(BldProject *project,
 {
     va_list ap;
     va_start(ap, project);
+
+    assert(project != NULL);
 
     char *source = va_arg(ap, char *);
     while (source != NULL) {
@@ -55,6 +59,8 @@ void PBldAddIncludePaths(BldProject *project,
     va_list ap;
     va_start(ap, project);
 
+    assert(project != NULL);
+
     char *includePath = va_arg(ap, char *);
     while (includePath != NULL) {
         size_t includePathLength = strlen(includePath);
@@ -76,7 +82,10 @@ void PBldAddIncludePaths(BldProject *project,
 
 void BldGenerate(BldProject *defaultTarget)
 {
+    assert(defaultTarget != NULL);
+
     FILE *makefile = fopen("Makefile", "w");
+    assert(makefile != NULL);
 
     PBldGenerateMakefile(makefile, defaultTarget, projects, projectIndex);
 }
