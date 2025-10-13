@@ -27,8 +27,8 @@ BldProject *BldNewProject(char *projectName,
     return project;
 }
 
-void BldAddSources(BldProject *project,
-                   ...)
+void PBldAddSources(BldProject *project,
+                    ...)
 {
     va_list ap;
     va_start(ap, project);
@@ -49,8 +49,8 @@ void BldAddSources(BldProject *project,
     va_end(ap);
 }
 
-void BldAddIncludePaths(BldProject *project,
-                        ...)
+void PBldAddIncludePaths(BldProject *project,
+                         ...)
 {
     va_list ap;
     va_start(ap, project);

@@ -2,6 +2,7 @@
 #define BUILD_H
 
 #include <stdbool.h>
+#include <stdlib.h>
 
 typedef enum
 {
@@ -34,11 +35,14 @@ BldProject *BldNewProject(char *projectName,
                           BldProjectType type,
                           BldLanguage language);
 
-void BldAddSources(BldProject *project, ...);
+#define BldAddSources(project, ...) PBldAddSources(project, __VA_ARGS__, NULL)
+void PBldAddSources(BldProject *project, ...);
 
-void BldAddIncludePaths(BldProject *project, ...);
+#define BldAddIncludePaths(project, ...) PBldAddIncludePaths(project, __VA_ARGS__, NULL)
+void PBldAddIncludePaths(BldProject *project, ...);
 
-void BldAddDependencies(BldProject *project, ...);
+#define BldAddDependencies(project, ...) PBldAddDependencies(project, __VA_ARGS__, NULL)
+void PBldAddDependencies(BldProject *project, ...);
 
 void BldGenerate(BldProject *defaultTarget);
 
