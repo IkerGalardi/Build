@@ -6,6 +6,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#include "Generators.h"
+
 BldProject projects[100];
 size_t projectIndex = 0;
 
@@ -74,5 +76,7 @@ void BldAddIncludePaths(BldProject *project,
 
 void BldGenerate(BldProject *defaultTarget)
 {
+    FILE *makefile = fopen("Makefile", "w");
 
+    PBldGenerateMakefile(makefile, defaultTarget, projects, projectIndex);
 }
