@@ -38,7 +38,7 @@ void PBldAddProjectToMakefile(FILE *makefile, BldProject *project)
         objNamesLen += objNameLen;
 
         fprintf(makefile, "bin/%s: %s\n", objName, token);
-        fprintf(makefile, "\t$(CC) -c $(CFLAGS)-o bin/%s %s\n\n", objName, token);
+        fprintf(makefile, "\t$(CC) -c $(CFLAGS) -o bin/%s %s\n\n", objName, token);
 
         token = strtok(NULL, " ");
         free(objName);
@@ -78,6 +78,8 @@ void PBldGenerateMakefile(FILE *makefile,
     } else if (defaultTarget->type == BLD_STATIC_LIBRARY) {
         fprintf(makefile, "all: lib%s.a\n\n", defaultTarget->projectName);
     }
+
+    fprintf(makefile, "CFLAGS=-Wall -Wextra\n\n");
 
     // Add a way to rebuild the makefile if the build script has been changed.
     fprintf(makefile, "Makefile: Build.c\n");
