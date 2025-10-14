@@ -1,3 +1,5 @@
 bin/*.o
 libBuild.so
 Build.dSYM/
+Makefile
+Build
