@@ -11,6 +11,14 @@ void PBldAddProjectToMakefile(FILE *makefile, BldProject *project)
     assert(makefile != NULL);
     assert(project != NULL);
 
+    if (project->type == BLD_DYNAMIC_LIBRARY) {
+        fprintf(makefile, "%s_CFLAGS=$(CFLAGS) $(CFLAGS_DYNLIB)\n", project->projectName);
+        fprintf(makefile, "%s_LDFLAGS=$(LDFLAGS) $(LDFLAGS_DYNLIB)\n\n", project->projectName);
+    } else {
+        fprintf(makefile, "%s_CFLAGS=$(CFLAGS)\n", project->projectName);
+        fprintf(makefile, "%s_LDFLAGS=$(LDFLAGS)\n\n", project->projectName);
+    }
+
     char *sourcesCopy = malloc(strlen(project->sources) + 1);
     strcpy(sourcesCopy, project->sources);
 
@@ -38,7 +46,7 @@ void PBldAddProjectToMakefile(FILE *makefile, BldProject *project)
         objNamesLen += objNameLen;
 
         fprintf(makefile, "bin/%s: %s\n", objName, token);
-        fprintf(makefile, "\t$(CC) -c $(CFLAGS) -o bin/%s %s\n\n", objName, token);
+        fprintf(makefile, "\t$(CC) -c $(%s_CFLAGS) -o bin/%s %s\n\n", project->projectName, objName, token);
 
         token = strtok(NULL, " ");
         free(objName);
@@ -48,14 +56,35 @@ void PBldAddProjectToMakefile(FILE *makefile, BldProject *project)
 
     fprintf(makefile, "%s_OBJ = %s\n\n", project->projectName, objNames);
     if (project->type == BLD_EXECUTABLE) {
-        fprintf(makefile, "%s: $(%s_OBJ)\n", project->projectName, project->projectName);
-        fprintf(makefile, "\t$(CC) $(LDFLAGS) $(%s_OBJ) -o %s\n\n", project->projectName, project->projectName);
+        fprintf(makefile,
+                "%s: $(%s_OBJ)\n",
+                project->projectName,
+                project->projectName);
+        fprintf(makefile,
+                "\t$(CC) $(%s_LDFLAGS) $(%s_OBJ) -o %s\n\n",
+                project->projectName,
+                project->projectName,
+                project->projectName);
     } else if (project->type == BLD_DYNAMIC_LIBRARY) {
-        fprintf(makefile, "lib%s.so: $(%s_OBJ)\n", project->projectName, project->projectName);
-        fprintf(makefile, "\t$(CC) -shared $(LDFLAGS) $(%s_OBJ) -o lib%s.so\n\n", project->projectName, project->projectName);
+        fprintf(makefile,
+                "lib%s.so: $(%s_OBJ)\n",
+                project->projectName,
+                project->projectName);
+        fprintf(makefile,
+                "\t$(CC) -shared $(%s_LDFLAGS) $(%s_OBJ) -o lib%s.so\n\n",
+                project->projectName,
+                project->projectName,
+                project->projectName);
     } else if (project-> type == BLD_STATIC_LIBRARY) {
-        fprintf(makefile, "lib%s.a: $(%s_OBJ)\n", project->projectName, project->projectName);
-        fprintf(makefile, "\t$(AR) rcs $(LDFLAGS) $(%s_OBJ) -o lib%s.a\n\n", project->projectName, project->projectName);
+        fprintf(makefile,
+                "lib%s.a: $(%s_OBJ)\n",
+                project->projectName,
+                project->projectName);
+        fprintf(makefile,
+                "\t$(AR) rcs $(%s_LDFLAGS) $(%s_OBJ) -o lib%s.a\n\n",
+                project->projectName,
+                project->projectName,
+                project->projectName);
     } else {
         assert(false);
     }
@@ -79,7 +108,9 @@ void PBldGenerateMakefile(FILE *makefile,
         fprintf(makefile, "all: lib%s.a\n\n", defaultTarget->projectName);
     }
 
-    fprintf(makefile, "CFLAGS=-Wall -Wextra\n\n");
+    fprintf(makefile, "CFLAGS=-Wall -Wextra\n");
+    fprintf(makefile, "CFLAGS_DYNLIB=-fPIC\n");
+    fprintf(makefile, "LDFLAGS_DYNLIB=-fPIC\n\n");
     fprintf(makefile, "ALL_OBJ=\n");
 
     // Add a way to rebuild the makefile if the build script has been changed.
