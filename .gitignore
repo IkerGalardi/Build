@@ -1,0 +1,3 @@
+bin/*.o
+libBuild.so
+Build.dSYM/
