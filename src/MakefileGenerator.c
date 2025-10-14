@@ -111,7 +111,8 @@ void PBldGenerateMakefile(FILE *makefile,
     fprintf(makefile, "CFLAGS=-Wall -Wextra\n");
     fprintf(makefile, "CFLAGS_DYNLIB=-fPIC\n");
     fprintf(makefile, "LDFLAGS_DYNLIB=-fPIC\n\n");
-    fprintf(makefile, "ALL_OBJ=\n");
+
+    fprintf(makefile, "ALL_OBJ=\n\n");
 
     // Add a way to rebuild the makefile if the build script has been changed.
     fprintf(makefile, "Makefile: Build.c\n");
