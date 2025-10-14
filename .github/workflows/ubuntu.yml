@@ -15,5 +15,3 @@ jobs:
     - uses: actions/checkout@v4
     - name: bootstrap script
       run: sh scripts/bootstrap.sh
-    - name: make
-      run: make
