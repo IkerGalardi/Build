@@ -1,4 +1,5 @@
 #include "Generators.h"
+#include "Platform.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -57,31 +58,31 @@ void PBldAddProjectToMakefile(FILE *makefile, BldProject *project)
     fprintf(makefile, "%s_OBJ = %s\n\n", project->projectName, objNames);
     if (project->type == BLD_EXECUTABLE) {
         fprintf(makefile,
-                "%s: $(%s_OBJ)\n",
+                PLAT_EXE_TEMPLATE ": $(%s_OBJ)\n",
                 project->projectName,
                 project->projectName);
         fprintf(makefile,
-                "\t$(CC) $(%s_LDFLAGS) $(%s_OBJ) -o %s\n\n",
+                "\t$(CC) $(%s_LDFLAGS) $(%s_OBJ) -o " PLAT_EXE_TEMPLATE "\n\n",
                 project->projectName,
                 project->projectName,
                 project->projectName);
     } else if (project->type == BLD_DYNAMIC_LIBRARY) {
         fprintf(makefile,
-                "lib%s.so: $(%s_OBJ)\n",
+                PLAT_DYNLIB_TEMPLATE ": $(%s_OBJ)\n",
                 project->projectName,
                 project->projectName);
         fprintf(makefile,
-                "\t$(CC) -shared $(%s_LDFLAGS) $(%s_OBJ) -o lib%s.so\n\n",
+                "\t$(CC) -shared $(%s_LDFLAGS) $(%s_OBJ) -o " PLAT_DYNLIB_TEMPLATE "\n\n",
                 project->projectName,
                 project->projectName,
                 project->projectName);
     } else if (project-> type == BLD_STATIC_LIBRARY) {
         fprintf(makefile,
-                "lib%s.a: $(%s_OBJ)\n",
+                PLAT_STATICLIB_TEMPLATE ": $(%s_OBJ)\n",
                 project->projectName,
                 project->projectName);
         fprintf(makefile,
-                "\t$(AR) rcs $(%s_LDFLAGS) $(%s_OBJ) -o lib%s.a\n\n",
+                "\t$(AR) rcs $(%s_LDFLAGS) $(%s_OBJ) -o " PLAT_STATICLIB_TEMPLATE "\n\n",
                 project->projectName,
                 project->projectName,
                 project->projectName);
@@ -101,11 +102,11 @@ void PBldGenerateMakefile(FILE *makefile,
     assert(projects != NULL);
 
     if (defaultTarget->type == BLD_EXECUTABLE) {
-        fprintf(makefile, "all: %s\n\n", defaultTarget->projectName);
+        fprintf(makefile, "all: " PLAT_EXE_TEMPLATE "\n\n", defaultTarget->projectName);
     } else if (defaultTarget->type == BLD_DYNAMIC_LIBRARY) {
-        fprintf(makefile, "all: lib%s.so\n\n", defaultTarget->projectName);
+        fprintf(makefile, "all: " PLAT_DYNLIB_TEMPLATE "\n\n", defaultTarget->projectName);
     } else if (defaultTarget->type == BLD_STATIC_LIBRARY) {
-        fprintf(makefile, "all: lib%s.a\n\n", defaultTarget->projectName);
+        fprintf(makefile, "all: " PLAT_STATICLIB_TEMPLATE "\n\n", defaultTarget->projectName);
     }
 
     fprintf(makefile, "CFLAGS=-Wall -Wextra\n");
