@@ -22,14 +22,8 @@ typedef enum
     BLD_LANGUAGE_C23
 } BldLanguage;
 
-typedef struct
-{
-    char projectName[64];
-    BldProjectType type;
-    char *sources;
-    char *includePaths;
-    BldLanguage language;
-} BldProject;
+typedef struct BldProject BldProject;
+
 
 BldProject *BldNewProject(char *projectName,
                           BldProjectType type,

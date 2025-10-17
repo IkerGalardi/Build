@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <assert.h>
 
+#include "Project.h"
 #include "Generators.h"
 
 BldProject projects[100];

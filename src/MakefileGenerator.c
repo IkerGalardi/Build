@@ -6,6 +6,8 @@
 #include <libgen.h>
 #include <assert.h>
 
+#include "Project.h"
+
 void PBldAddProjectToMakefile(FILE *makefile, BldProject *project)
 {
     // TODO: too many allocations :S
