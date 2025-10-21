@@ -81,6 +81,33 @@ void PBldAddIncludePaths(BldProject *project,
     va_end(ap);
 }
 
+void PBldAddDefines(BldProject *project, ...)
+{
+    va_list ap;
+    va_start(ap, project);
+
+    assert(project != NULL);
+
+    char *define = va_arg(ap, char *);
+    while (define != NULL) {
+        size_t defineLength = strlen(define);
+        size_t projectDefineLength = 0;
+        if (project->defines != NULL) {
+            projectDefineLength = strlen(project->defines);
+        }
+
+        project->defines = realloc(project->defines,
+                                   defineLength + projectDefineLength + 2);
+
+        strncat(project->defines, define, defineLength + projectDefineLength + 1);
+        strncat(project->defines, " ", defineLength + projectDefineLength + 1);
+
+        define = va_arg(ap, char *);
+    }
+
+    va_end(ap);
+}
+
 void BldGenerate(BldProject *defaultTarget)
 {
     assert(defaultTarget != NULL);

@@ -9,6 +9,7 @@ typedef struct BldProject
     BldProjectType type;
     char *sources;
     char *includePaths;
+    char *defines;
     BldLanguage language;
 } BldProject;
 

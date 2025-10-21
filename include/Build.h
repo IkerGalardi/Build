@@ -38,6 +38,9 @@ void PBldAddIncludePaths(BldProject *project, ...);
 #define BldAddDependencies(project, ...) PBldAddDependencies(project, __VA_ARGS__, NULL)
 void PBldAddDependencies(BldProject *project, ...);
 
+#define BldAddDefines(project, ...) PBldAddDefines(project, __VA_ARGS__, NULL)
+void PBldAddDefines(BldProject *project, ...);
+
 void BldGenerate(BldProject *defaultTarget);
 
 #endif // BUILD_H
