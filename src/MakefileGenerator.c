@@ -115,8 +115,7 @@ void PBldAddProjectToMakefile(FILE *makefile, BldProject *project)
                 project->projectName,
                 project->projectName);
         fprintf(makefile,
-                "\t$(AR) rcs $(%s_LDFLAGS) $(%s_OBJ) -o " PLAT_STATICLIB_TEMPLATE "\n\n",
-                project->projectName,
+                "\t$(AR) rcs " PLAT_STATICLIB_TEMPLATE " $(%s_OBJ)\n\n",
                 project->projectName,
                 project->projectName);
     } else {
