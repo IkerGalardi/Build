@@ -1,0 +1,6 @@
+ArtifactNames/TestExe
+ArtifactNames/bin/TestDLib.o
+ArtifactNames/bin/TestExe.o
+ArtifactNames/bin/TestSLib.o
+ArtifactNames/libTestDLib.dylib
+ArtifactNames/libTestSLib.a
