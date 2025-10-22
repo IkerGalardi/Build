@@ -4,3 +4,10 @@ ArtifactNames/bin/TestExe.o
 ArtifactNames/bin/TestSLib.o
 ArtifactNames/libTestDLib.dylib
 ArtifactNames/libTestSLib.a
+
+Defines/bin/TestEmpty.o
+Defines/bin/TestNumber.o
+Defines/bin/TestString.o
+Defines/DefineEmpty
+Defines/DefineNumber
+Defines/DefineString
