@@ -13,6 +13,12 @@ static char *PBldDefinesToGccStyle(char *defines)
     char *result = NULL;
     size_t resultLength = 0;
 
+    if (defines == NULL) {
+        result = malloc(1);
+        *result = '\0';
+        return result;
+    }
+
     char *token = strtok(defines, " ");
     while (token != NULL) {
         size_t tokenLength = strlen(token);

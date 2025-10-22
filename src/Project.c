@@ -25,6 +25,7 @@ BldProject *BldNewProject(char *projectName,
     strncpy(project->projectName, projectName, 63);
     project->type = type;
     project->sources = NULL;
+    project->defines = NULL;
     project->language = language;
 
     return project;
