@@ -12,3 +12,6 @@ Defines/bin/TestString.o
 Defines/DefineEmpty
 Defines/DefineNumber
 Defines/DefineString
+
+Includes/bin/Test.o
+Includes/Test
