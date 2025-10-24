@@ -35,6 +35,33 @@ static char *PBldDefinesToGccStyle(char *defines)
     return result;
 }
 
+static char *PBldIncludesToGccStyle(char *includePaths)
+{
+    char *result = NULL;
+    size_t resultLength = 0;
+
+    if (includePaths == NULL) {
+        result = malloc(1);
+        *result = '\0';
+        return result;
+    }
+
+    char *token = strtok(includePaths, " ");
+    while (token != NULL) {
+        size_t tokenLength = strlen(token);
+        result = realloc(result, resultLength + 2 + tokenLength + 1);
+        resultLength = resultLength + 2 + tokenLength;
+
+        strncat(result, "-I", resultLength);
+        strncat(result, token, resultLength);
+        strncat(result, " ", resultLength);
+
+        token = strtok(NULL, " ");
+    }
+
+    return result;
+}
+
 void PBldAddProjectToMakefile(FILE *makefile, BldProject *project)
 {
     // TODO: too many allocations :S
@@ -42,15 +69,21 @@ void PBldAddProjectToMakefile(FILE *makefile, BldProject *project)
     assert(project != NULL);
 
     char *gccDefines = PBldDefinesToGccStyle(project->defines);
+    char *gccIncludes = PBldIncludesToGccStyle(project->includePaths);
     if (project->type == BLD_DYNAMIC_LIBRARY) {
-        fprintf(makefile, "%s_CFLAGS=$(CFLAGS) $(CFLAGS_DYNLIB) %s\n",
+        fprintf(makefile, "%s_CFLAGS=$(CFLAGS) $(CFLAGS_DYNLIB) %s %s\n",
                 project->projectName,
-                gccDefines);
+                gccDefines,
+                gccIncludes);
         fprintf(makefile, "%s_LDFLAGS=$(LDFLAGS) $(LDFLAGS_DYNLIB)\n\n", project->projectName);
     } else {
-        fprintf(makefile, "%s_CFLAGS=$(CFLAGS) %s\n", project->projectName, gccDefines);
+        fprintf(makefile, "%s_CFLAGS=$(CFLAGS) %s %s\n",
+                project->projectName,
+                gccDefines,
+                gccIncludes);
         fprintf(makefile, "%s_LDFLAGS=$(LDFLAGS)\n\n", project->projectName);
     }
+    free(gccIncludes);
     free(gccDefines);
 
     char *sourcesCopy = malloc(strlen(project->sources) + 1);
