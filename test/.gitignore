@@ -15,3 +15,10 @@ Defines/DefineString
 
 Includes/bin/Test.o
 Includes/Test
+
+StandardVersion/bin/*.o
+StandardVersion/c90
+StandardVersion/c99
+StandardVersion/c11
+StandardVersion/c17
+StandardVersion/c23
