@@ -203,7 +203,7 @@ void PBldGenerateMakefile(FILE *makefile,
     fprintf(makefile, "CFLAGS_DYNLIB=-fPIC\n");
     fprintf(makefile, "LDFLAGS_DYNLIB=-fPIC\n\n");
 
-    fprintf(makefile, "ALL_OBJ=\n\n");
+    fprintf(makefile, "TO_CLEAN=\n\n");
 
     // Add a way to rebuild the makefile if the build script has been changed.
     fprintf(makefile, "Makefile: Build.c\n");
@@ -211,11 +211,20 @@ void PBldGenerateMakefile(FILE *makefile,
     fprintf(makefile, "\t./Build\n\n");
 
     for (size_t i = 0; i < projectCount; i++) {
-        PBldAddProjectToMakefile(makefile, &projects[i]);
+        BldProject *project = &projects[i];
+        PBldAddProjectToMakefile(makefile, project);
 
-        fprintf(makefile, "ALL_OBJ+=$(%s_OBJ)\n\n", projects->projectName);
+        fprintf(makefile, "TO_CLEAN+=$(%s_OBJ)\n", project->projectName);
+
+        if (project->type == BLD_EXECUTABLE) {
+            fprintf(makefile, "TO_CLEAN+=" PLAT_EXE_TEMPLATE "\n\n", project->projectName);
+        } else if (project->type == BLD_DYNAMIC_LIBRARY) {
+            fprintf(makefile, "TO_CLEAN+=" PLAT_DYNLIB_TEMPLATE "\n\n", project->projectName);
+        } else if (project->type == BLD_STATIC_LIBRARY) {
+            fprintf(makefile, "TO_CLEAN+=" PLAT_STATICLIB_TEMPLATE "\n\n", project->projectName);
+        }
     }
 
     fprintf(makefile, "clean:\n");
-    fprintf(makefile, "\trm -f $(ALL_OBJ)\n");
+    fprintf(makefile, "\trm -f $(TO_CLEAN)\n");
 }
