@@ -114,7 +114,9 @@ void PBldAddProjectToMakefile(FILE *makefile, BldProject *project)
     char *sourcesCopy = malloc(strlen(project->sources) + 1);
     strcpy(sourcesCopy, project->sources);
 
-    char *objNames = NULL;
+    char *objNames = malloc(1);
+    *objNames = '\0';
+
     size_t objNamesLen = 0;
     char *token = strtok(sourcesCopy, " ");
     while(token != NULL) {
