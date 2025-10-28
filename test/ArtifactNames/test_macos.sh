@@ -15,6 +15,7 @@ then
     echo " · Executable artifact:      PASS"
 else
     echo " · Executable artifact:      FAIL"
+    exit 1
 fi
 
 if [ -e libTestDLib.dylib ]
@@ -22,6 +23,7 @@ then
     echo " · Dynamic library artifact: PASS"
 else
     echo " · Dynamic library artifact: FAIL"
+    exit 1
 fi
 
 if [ -e libTestSLib.a ]
@@ -29,4 +31,5 @@ then
     echo " · Static library artifact:  PASS"
 else
     echo " · Static library artifact:  FAIL"
+    exit 1
 fi

@@ -11,6 +11,7 @@ make clean > /dev/null
 if [ -e bin/a.o ]
 then
     echo " · Object file removal: FAIL"
+    exit 1
 else
     echo " · Object file removal: PASS"
 fi
@@ -18,6 +19,7 @@ fi
 if [ -e libmeth.dylib ]
 then
     echo " · Library removal:     FAIL"
+    exit 1
 else
     echo " · Library removal:     PASS"
 fi

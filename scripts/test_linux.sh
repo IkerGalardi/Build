@@ -1,21 +1,48 @@
-set -e
+RETURN="0"
 
 cd test/ArtifactNames
-sh test_linux.sh
+if sh test_linux.sh
+then
+    true
+else
+    RETURN="1"
+fi
 cd ../..
 
 cd test/Includes
-sh test.sh
+if sh test.sh
+then
+    true
+else
+    RETURN="1"
+fi
 cd ../..
 
 cd test/StandardVersion
-sh test.sh
+if sh test.sh
+then
+    true
+else
+    RETURN="1"
+fi
 cd ../..
 
 cd test/Clean
-sh test_linux.sh
+if sh test_linux.sh
+then
+    true
+else
+    RETURN="1"
+fi
 cd ../..
 
 cd test/Defines
-sh test.sh
+if sh test.sh
+then
+    true
+else
+    RETURN="1"
+fi
 cd ../..
+
+exit $RETURN

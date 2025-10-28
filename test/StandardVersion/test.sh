@@ -19,6 +19,7 @@ then
     echo " · c90: PASS"
 else
     echo " · c90: FAIL"
+    exit 1
 fi
 
 if make c99 > /dev/null 2> /dev/null
@@ -33,6 +34,7 @@ then
     echo " · c99: PASS"
 else
     echo " · c99: FAIL"
+    exit 1
 fi
 
 if make c11 > /dev/null 2> /dev/null
@@ -47,6 +49,7 @@ then
     echo " · c11: PASS"
 else
     echo " · c11: FAIL"
+    exit 1
 fi
 
 if make c17 > /dev/null 2> /dev/null
@@ -61,6 +64,7 @@ then
     echo " · c17: PASS"
 else
     echo " · c17: FAIL"
+    exit 1
 fi
 
 if make c23 > /dev/null 2> /dev/null
@@ -75,4 +79,5 @@ then
     echo " · c23: PASS"
 else
     echo " · c23: FAIL"
+    exit 1
 fi

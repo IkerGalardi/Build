@@ -12,4 +12,5 @@ then
     echo " · Correcly included: PASS"
 else
     echo " · Correcly included: FAIL"
+    exit 1
 fi
