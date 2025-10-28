@@ -22,3 +22,7 @@ StandardVersion/c99
 StandardVersion/c11
 StandardVersion/c17
 StandardVersion/c23
+
+Clean/bin/a.o
+Clean/libmeth.dylib
+Clean/libmeth.so
