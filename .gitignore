@@ -1,4 +1,5 @@
 bin/*.o
+bin/*.d
 libBuild.so
 libBuild.dylib
 Build.dSYM/

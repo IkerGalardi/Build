@@ -201,7 +201,7 @@ void PBldGenerateMakefile(FILE *makefile,
         fprintf(makefile, "all: " PLAT_STATICLIB_TEMPLATE "\n\n", defaultTarget->projectName);
     }
 
-    fprintf(makefile, "CFLAGS=-Wall -Wextra\n");
+    fprintf(makefile, "CFLAGS=-Wall -Wextra -MMD\n");
     fprintf(makefile, "CFLAGS_DYNLIB=-fPIC\n");
     fprintf(makefile, "LDFLAGS_DYNLIB=-fPIC\n\n");
 
@@ -226,6 +226,8 @@ void PBldGenerateMakefile(FILE *makefile,
             fprintf(makefile, "TO_CLEAN+=" PLAT_STATICLIB_TEMPLATE "\n\n", project->projectName);
         }
     }
+
+    fprintf(makefile, "-include bin/*.d\n");
 
     fprintf(makefile, "clean:\n");
     fprintf(makefile, "\trm -f $(TO_CLEAN)\n");
