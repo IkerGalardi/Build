@@ -1,5 +1,7 @@
 echo "Standard version test"
 
+uname -a | grep Linux > /dev/null && export LD_LIBRARY_PATH=./
+
 set -e
 
 cc -o Build Build.c -L../../ -lBuild -I../../Include > /dev/null
