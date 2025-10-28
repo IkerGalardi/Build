@@ -68,19 +68,44 @@ void PBldAddProjectToMakefile(FILE *makefile, BldProject *project)
     assert(makefile != NULL);
     assert(project != NULL);
 
+    char *cStandardVersion = NULL;
+    switch (project->language) {
+    case BLD_LANGUAGE_C90:
+        cStandardVersion = "-std=c90 ";
+        break;
+    case BLD_LANGUAGE_C99:
+        cStandardVersion = "-std=c99 ";
+        break;
+    case BLD_LANGUAGE_C11:
+        cStandardVersion = "-std=c11 ";
+        break;
+    case BLD_LANGUAGE_C17:
+        cStandardVersion = "-std=c17 ";
+        break;
+    case BLD_LANGUAGE_C23:
+        cStandardVersion = "-std=c23 ";
+        break;
+    default:
+        cStandardVersion = "";
+        break;
+    }
+
+
     char *gccDefines = PBldDefinesToGccStyle(project->defines);
     char *gccIncludes = PBldIncludesToGccStyle(project->includePaths);
     if (project->type == BLD_DYNAMIC_LIBRARY) {
-        fprintf(makefile, "%s_CFLAGS=$(CFLAGS) $(CFLAGS_DYNLIB) %s %s\n",
+        fprintf(makefile, "%s_CFLAGS=$(CFLAGS) $(CFLAGS_DYNLIB) %s %s %s\n",
                 project->projectName,
                 gccDefines,
-                gccIncludes);
+                gccIncludes,
+                cStandardVersion);
         fprintf(makefile, "%s_LDFLAGS=$(LDFLAGS) $(LDFLAGS_DYNLIB)\n\n", project->projectName);
     } else {
-        fprintf(makefile, "%s_CFLAGS=$(CFLAGS) %s %s\n",
+        fprintf(makefile, "%s_CFLAGS=$(CFLAGS) %s %s %s\n",
                 project->projectName,
                 gccDefines,
-                gccIncludes);
+                gccIncludes,
+                cStandardVersion);
         fprintf(makefile, "%s_LDFLAGS=$(LDFLAGS)\n\n", project->projectName);
     }
     free(gccIncludes);
