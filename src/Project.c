@@ -117,4 +117,7 @@ void BldGenerate(BldProject *defaultTarget)
     assert(makefile != NULL);
 
     PBldGenerateMakefile(makefile, defaultTarget, projects, projectIndex);
+
+    // Why not simply call the mkdir system call? Don't want to bother with umasks for now.
+    system("mkdir -p bin/");
 }
