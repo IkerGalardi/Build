@@ -4,7 +4,7 @@
 #include <stddef.h>
 #include <stdio.h>
 
-#include "../include/Build.h"
+#include "Build.h"
 
 void PBldGenerateMakefile(FILE *makefile,
                           BldProject *defaultTarget,

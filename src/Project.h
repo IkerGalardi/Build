@@ -1,7 +1,7 @@
 #ifndef PROJECT_H
 #define PROJECT_H
 
-#include "../include/Build.h"
+#include "Build.h"
 
 typedef struct BldProject
 {
