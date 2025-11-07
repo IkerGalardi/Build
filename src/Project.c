@@ -9,6 +9,7 @@
 
 #include "Project.h"
 #include "Generators.h"
+#include "Util.h"
 
 BldProject projects[100];
 size_t projectIndex = 0;
@@ -24,8 +25,9 @@ BldProject *BldNewProject(char *projectName,
     memset(project->projectName, 0, 64);
     strncpy(project->projectName, projectName, 63);
     project->type = type;
-    project->sources = NULL;
-    project->defines = NULL;
+    project->sources = UtilCreateStringArray();
+    project->includePaths = UtilCreateStringArray();
+    project->defines = UtilCreateStringArray();
     project->language = language;
 
     return project;
@@ -41,15 +43,7 @@ void PBldSetSources(BldProject *project,
 
     char *source = va_arg(ap, char *);
     while (source != NULL) {
-        size_t sourceLength = strlen(source);
-        size_t projectLength = 0;
-        if (project->sources != NULL)
-            projectLength = strlen(project->sources);
-
-        project->sources = realloc(project->sources, sourceLength + projectLength + 2);
-        strncat(project->sources, source, sourceLength + projectLength + 1);
-        strncat(project->sources, " ", sourceLength + projectLength + 1);
-
+        UtilAppendToStringArray(&project->sources, source);
         source = va_arg(ap, char *);
     }
     va_end(ap);
@@ -65,18 +59,7 @@ void PBldSetIncludePaths(BldProject *project,
 
     char *includePath = va_arg(ap, char *);
     while (includePath != NULL) {
-        size_t includePathLength = strlen(includePath);
-        size_t projectLength = 0;
-        if (project->includePaths != NULL)
-            projectLength = strlen(project->includePaths);
-
-        project->includePaths = realloc(project->includePaths,
-                                        includePathLength + projectLength + 2);
-        strncat(project->includePaths,
-                includePath,
-                includePathLength + projectLength + 1);
-        strncat(project->includePaths, " ", includePathLength + projectLength + 1);
-
+        UtilAppendToStringArray(&project->includePaths, includePath);
         includePath = va_arg(ap, char *);
     }
     va_end(ap);
@@ -91,18 +74,7 @@ void PBldSetDefines(BldProject *project, ...)
 
     char *define = va_arg(ap, char *);
     while (define != NULL) {
-        size_t defineLength = strlen(define);
-        size_t projectDefineLength = 0;
-        if (project->defines != NULL) {
-            projectDefineLength = strlen(project->defines);
-        }
-
-        project->defines = realloc(project->defines,
-                                   defineLength + projectDefineLength + 2);
-
-        strncat(project->defines, define, defineLength + projectDefineLength + 1);
-        strncat(project->defines, " ", defineLength + projectDefineLength + 1);
-
+        UtilAppendToStringArray(&project->defines, define);
         define = va_arg(ap, char *);
     }
 
