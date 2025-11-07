@@ -2,14 +2,15 @@
 #define PROJECT_H
 
 #include "Build.h"
+#include "Util.h"
 
 typedef struct BldProject
 {
     char projectName[64];
     BldProjectType type;
-    char *sources;
-    char *includePaths;
-    char *defines;
+    UtilStringArray sources;
+    UtilStringArray includePaths;
+    UtilStringArray defines;
     BldLanguage language;
 } BldProject;
 

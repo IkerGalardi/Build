@@ -7,20 +7,22 @@
 #include <assert.h>
 
 #include "Project.h"
+#include "Util.h"
 
-static char *PBldDefinesToGccStyle(char *defines)
+static char *PBldDefinesToGccStyle(UtilStringArray defines)
 {
     char *result = NULL;
     size_t resultLength = 0;
 
-    if (defines == NULL) {
+    if (defines.stringCount == 0) {
         result = malloc(1);
         *result = '\0';
         return result;
     }
 
-    char *token = strtok(defines, " ");
-    while (token != NULL) {
+    for (size_t i = 0; i < defines.stringCount; i++) {
+        char *token = defines.data[i];
+
         size_t tokenLength = strlen(token);
         result = realloc(result, resultLength + 2 + tokenLength + 1);
         resultLength = resultLength + 2 + tokenLength;
@@ -28,26 +30,25 @@ static char *PBldDefinesToGccStyle(char *defines)
         strncat(result, "-D", resultLength);
         strncat(result, token, resultLength);
         strncat(result, " ", resultLength);
-
-        token = strtok(NULL, " ");
     }
 
     return result;
 }
 
-static char *PBldIncludesToGccStyle(char *includePaths)
+static char *PBldIncludesToGccStyle(UtilStringArray includePaths)
 {
     char *result = NULL;
     size_t resultLength = 0;
 
-    if (includePaths == NULL) {
+    if (includePaths.stringCount == 0) {
         result = malloc(1);
         *result = '\0';
         return result;
     }
 
-    char *token = strtok(includePaths, " ");
-    while (token != NULL) {
+    for (size_t i = 0; i < includePaths.stringCount; i++) {
+        char *token = includePaths.data[i];
+
         size_t tokenLength = strlen(token);
         result = realloc(result, resultLength + 2 + tokenLength + 1);
         resultLength = resultLength + 2 + tokenLength;
@@ -55,8 +56,6 @@ static char *PBldIncludesToGccStyle(char *includePaths)
         strncat(result, "-I", resultLength);
         strncat(result, token, resultLength);
         strncat(result, " ", resultLength);
-
-        token = strtok(NULL, " ");
     }
 
     return result;
@@ -111,44 +110,45 @@ void PBldSetProjectToMakefile(FILE *makefile, BldProject *project)
     free(gccIncludes);
     free(gccDefines);
 
-    char *sourcesCopy = malloc(strlen(project->sources) + 1);
-    strcpy(sourcesCopy, project->sources);
+    UtilStringArray objectFiles = UtilCreateStringArray();
 
-    char *objNames = malloc(1);
-    *objNames = '\0';
+    for (size_t i = 0; i < project->sources.stringCount; i++) {
+        char *sourceFile = project->sources.data[i];
 
-    size_t objNamesLen = 0;
-    char *token = strtok(sourcesCopy, " ");
-    while(token != NULL) {
-        size_t basenameLen = strlen(token);
-        char *objName = malloc(basenameLen + 1);
-        char *basenameStr = basename(token);
-        strncpy(objName, basenameStr, basenameLen + 1);
+        size_t objectFileLength = strlen(basename(sourceFile));
+        char *objectFile = malloc(objectFileLength + 1);
+        strncpy(objectFile, basename(sourceFile), objectFileLength);
 
-        // TODO: assumes that there is a dot character and at least another character
-        //       after it. Don't assume that you idiot.
-        char *extPointer = strrchr(objName, '.');
+        char *extPointer = strrchr(objectFile, '.');
         assert(extPointer != NULL);
         *(extPointer+1) = 'o';
         *(extPointer+2) = '\0';
 
-        size_t objNameLen = strlen(objName);
-        objNames = realloc(objNames, objNamesLen + strlen(objName) + 6);
-        strncat(objNames, "bin/", objNamesLen + strlen(objName) + 5);
-        strncat(objNames, objName, objNamesLen + strlen(objName) + 5);
-        strncat(objNames, " ", objNamesLen + strlen(objName) + 5);
-        objNamesLen += objNameLen;
+        const size_t objectPathLength = strlen("bin/") + strlen(objectFile);
+        char *objectPath = malloc(objectPathLength + 1);
+        strncpy(objectPath, "bin/", objectPathLength);
+        strncat(objectPath, objectFile, objectPathLength);
 
-        fprintf(makefile, "bin/%s: %s\n", objName, token);
-        fprintf(makefile, "\t$(CC) -c $(%s_CFLAGS) -o bin/%s %s\n\n", project->projectName, objName, token);
+        fprintf(makefile, "bin/%s: %s\n", objectFile, sourceFile);
+        fprintf(makefile,
+                "\t$(CC) -c $(%s_CFLAGS) -o bin/%s %s\n\n",
+                project->projectName,
+                objectFile,
+                sourceFile);
 
-        token = strtok(NULL, " ");
-        free(objName);
+        // Should move instead of appending. That way we do not allocate and
+        // free the same string.
+        UtilAppendToStringArray(&objectFiles, objectPath);
+        free(objectFile);
+        free(objectPath);
     }
 
-    free(sourcesCopy);
+    fprintf(makefile, "%s_OBJ =", project->projectName);
+    for (size_t i = 0; i < objectFiles.stringCount; i++) {
+        fprintf(makefile, " %s", objectFiles.data[i]);
+    }
+    fprintf(makefile, "\n\n");
 
-    fprintf(makefile, "%s_OBJ = %s\n\n", project->projectName, objNames);
     if (project->type == BLD_EXECUTABLE) {
         fprintf(makefile,
                 PLAT_EXE_TEMPLATE ": $(%s_OBJ)\n",
