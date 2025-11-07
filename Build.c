@@ -7,8 +7,8 @@ int main(int argc, char **argv)
     BldProject *lib = BldNewProject("Build",
                                     BLD_DYNAMIC_LIBRARY,
                                     BLD_LANGUAGE_C17);
-    BldAddSources(lib, "src/Project.c", "src/MakefileGenerator.c");
-    BldAddIncludePaths(lib, "include");
+    BldSetSources(lib, "src/Project.c", "src/MakefileGenerator.c");
+    BldSetIncludePaths(lib, "include");
 
     BldGenerate(lib);
 }

@@ -62,7 +62,7 @@ static char *PBldIncludesToGccStyle(char *includePaths)
     return result;
 }
 
-void PBldAddProjectToMakefile(FILE *makefile, BldProject *project)
+void PBldSetProjectToMakefile(FILE *makefile, BldProject *project)
 {
     // TODO: too many allocations :S
     assert(makefile != NULL);
@@ -214,7 +214,7 @@ void PBldGenerateMakefile(FILE *makefile,
 
     for (size_t i = 0; i < projectCount; i++) {
         BldProject *project = &projects[i];
-        PBldAddProjectToMakefile(makefile, project);
+        PBldSetProjectToMakefile(makefile, project);
 
         fprintf(makefile, "TO_CLEAN+=$(%s_OBJ)\n", project->projectName);
 

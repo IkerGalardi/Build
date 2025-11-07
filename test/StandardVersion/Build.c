@@ -3,7 +3,7 @@
 static BldProject *SingleFileExecutable(char *name, char *file, BldLanguage lang)
 {
     BldProject *exe = BldNewProject(name, BLD_EXECUTABLE, lang);
-    BldAddSources(exe, file);
+    BldSetSources(exe, file);
     return exe;
 }
 
