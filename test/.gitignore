@@ -26,3 +26,6 @@ StandardVersion/c23
 Clean/bin/a.o
 Clean/libmeth.dylib
 Clean/libmeth.so
+
+UnitTest/StringArrayTest
+UnitTest/StringArrayTest.dSYM
