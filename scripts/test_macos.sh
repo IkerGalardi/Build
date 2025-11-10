@@ -1,5 +1,14 @@
 RETURN="0"
 
+cd test/UnitTest
+if sh test.sh
+then
+    true
+else
+    RETURN="1"
+fi
+cd ../..
+
 cd test/ArtifactNames
 if sh test_macos.sh
 then
