@@ -4,7 +4,7 @@ uname -a | grep Linux > /dev/null && export LD_LIBRARY_PATH=./
 
 set -e
 
-cc -o Build Build.c -L../../ -lBuild -I../../Include > /dev/null
+cc -o Build Build.c -L../../ -lBuild -I../../include > /dev/null
 ./Build > /dev/null
 
 if make c90 > /dev/null 2> /dev/null
