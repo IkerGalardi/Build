@@ -111,23 +111,35 @@ void PBldSetProjectToMakefile(FILE *makefile, BldProject *project)
     free(gccDefines);
 
     UtilStringArray objectFiles = UtilCreateStringArray();
+    UtilStringArray dependencyFiles = UtilCreateStringArray();
 
     for (size_t i = 0; i < project->sources.stringCount; i++) {
         char *sourceFile = project->sources.data[i];
 
-        size_t objectFileLength = strlen(basename(sourceFile));
-        char *objectFile = malloc(objectFileLength + 1);
-        strncpy(objectFile, basename(sourceFile), objectFileLength);
-
+        const size_t sourceFileLength = strlen(basename(sourceFile));
+        char *objectFile = malloc(sourceFileLength + 1);
+        strncpy(objectFile, basename(sourceFile), sourceFileLength);
         char *extPointer = strrchr(objectFile, '.');
         assert(extPointer != NULL);
         *(extPointer+1) = 'o';
+        *(extPointer+2) = '\0';
+
+        char *dependencyFile = malloc(sourceFileLength + 1);
+        strncpy(dependencyFile, basename(sourceFile), sourceFileLength);
+        extPointer = strrchr(dependencyFile, '.');
+        assert(extPointer != NULL);
+        *(extPointer+1) = 'd';
         *(extPointer+2) = '\0';
 
         const size_t objectPathLength = strlen("bin/") + strlen(objectFile);
         char *objectPath = malloc(objectPathLength + 1);
         strncpy(objectPath, "bin/", objectPathLength);
         strncat(objectPath, objectFile, objectPathLength);
+
+        const size_t dependencyPathLength = strlen("bin/") + strlen(dependencyFile);
+        char *dependencyPath = malloc(dependencyPathLength + 1);
+        strncpy(dependencyPath, "bin/", dependencyPathLength);
+        strncat(dependencyPath, dependencyFile, dependencyPathLength);
 
         fprintf(makefile, "bin/%s: %s\n", objectFile, sourceFile);
         fprintf(makefile,
@@ -139,7 +151,9 @@ void PBldSetProjectToMakefile(FILE *makefile, BldProject *project)
         // Should move instead of appending. That way we do not allocate and
         // free the same string.
         UtilAppendToStringArray(&objectFiles, objectPath);
+        UtilAppendToStringArray(&dependencyFiles, dependencyPath);
         free(objectFile);
+        free(dependencyFile);
         free(objectPath);
     }
 
@@ -147,6 +161,13 @@ void PBldSetProjectToMakefile(FILE *makefile, BldProject *project)
     for (size_t i = 0; i < objectFiles.stringCount; i++) {
         fprintf(makefile, " %s", objectFiles.data[i]);
     }
+    fprintf(makefile, "\n");
+
+    fprintf(makefile, "%s_DEP =", project->projectName);
+    for (size_t i = 0; i < dependencyFiles.stringCount; i++) {
+        fprintf(makefile, " %s", dependencyFiles.data[i]);
+    }
+
     fprintf(makefile, "\n\n");
 
     if (project->type == BLD_EXECUTABLE) {
@@ -217,6 +238,7 @@ void PBldGenerateMakefile(FILE *makefile,
         PBldSetProjectToMakefile(makefile, project);
 
         fprintf(makefile, "TO_CLEAN+=$(%s_OBJ)\n", project->projectName);
+        fprintf(makefile, "TO_CLEAN+=$(%s_DEP)\n", project->projectName);
 
         if (project->type == BLD_EXECUTABLE) {
             fprintf(makefile, "TO_CLEAN+=" PLAT_EXE_TEMPLATE "\n\n", project->projectName);
