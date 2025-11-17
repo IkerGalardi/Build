@@ -41,6 +41,8 @@ void PBldSetDependencies(BldProject *project, ...);
 #define BldSetDefines(project, ...) PBldSetDefines(project, __VA_ARGS__, NULL)
 void PBldSetDefines(BldProject *project, ...);
 
+void BldSetLinkerScript(BldProject *project, char *linkerScript);
+
 void BldGenerate(BldProject *defaultTarget);
 
 #endif // BUILD_H

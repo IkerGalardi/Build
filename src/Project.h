@@ -12,6 +12,7 @@ typedef struct BldProject
     UtilStringArray includePaths;
     UtilStringArray defines;
     BldLanguage language;
+    char *linkerScript;
 } BldProject;
 
 #endif // PROJECT_H

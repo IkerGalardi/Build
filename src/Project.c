@@ -29,6 +29,7 @@ BldProject *BldNewProject(char *projectName,
     project->includePaths = UtilCreateStringArray();
     project->defines = UtilCreateStringArray();
     project->language = language;
+    project->linkerScript = NULL;
 
     return project;
 }
@@ -79,6 +80,11 @@ void PBldSetDefines(BldProject *project, ...)
     }
 
     va_end(ap);
+}
+
+void BldSetLinkerScript(BldProject *project, char *linkerScript)
+{
+    project->linkerScript = linkerScript;
 }
 
 void BldGenerate(BldProject *defaultTarget)
