@@ -92,4 +92,10 @@ void BldGenerate(BldProject *defaultTarget)
 
     // Why not simply call the mkdir system call? Don't want to bother with umasks for now.
     system("mkdir -p bin/");
+
+    for (size_t i = 0; i < projectIndex; i++) {
+        char commandBuffer[255] = {0};
+        snprintf(commandBuffer, 254, "mkdir -p bin/%s", projects[i].projectName);
+        system(commandBuffer);
+    }
 }

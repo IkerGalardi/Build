@@ -121,31 +121,41 @@ void PBldAddProjectToMakefile(FILE *makefile, BldProject *project)
         strncpy(objectFile, basename(sourceFile), sourceFileLength);
         char *extPointer = strrchr(objectFile, '.');
         assert(extPointer != NULL);
-        *(extPointer+1) = 'o';
-        *(extPointer+2) = '\0';
+        *(extPointer) = '\0';
 
         char *dependencyFile = malloc(sourceFileLength + 1);
         strncpy(dependencyFile, basename(sourceFile), sourceFileLength);
         extPointer = strrchr(dependencyFile, '.');
         assert(extPointer != NULL);
-        *(extPointer+1) = 'd';
-        *(extPointer+2) = '\0';
+        *(extPointer) = '\0';
 
-        const size_t objectPathLength = strlen("bin/") + strlen(objectFile);
+        const size_t objectPathLength = strlen("bin/") +
+                                        strlen(project->projectName) +
+                                        strlen(objectFile) +
+                                        4;
         char *objectPath = malloc(objectPathLength + 1);
-        strncpy(objectPath, "bin/", objectPathLength);
-        strncat(objectPath, objectFile, objectPathLength);
+        snprintf(objectPath,
+                 objectPathLength,
+                 "bin/%s/%s.o",
+                 project->projectName,
+                 objectFile);
 
-        const size_t dependencyPathLength = strlen("bin/") + strlen(dependencyFile);
+        const size_t dependencyPathLength = strlen("bin/") +
+                                            strlen(project->projectName) +
+                                            strlen(dependencyFile) +
+                                            4;
         char *dependencyPath = malloc(dependencyPathLength + 1);
-        strncpy(dependencyPath, "bin/", dependencyPathLength);
-        strncat(dependencyPath, dependencyFile, dependencyPathLength);
+        snprintf(dependencyPath,
+                 dependencyPathLength,
+                 "bin/%s/%s.d",
+                 project->projectName,
+                 dependencyFile);
 
-        fprintf(makefile, "bin/%s: %s\n", objectFile, sourceFile);
+        fprintf(makefile, "%s: %s\n", objectPath, sourceFile);
         fprintf(makefile,
-                "\t$(CC) -c $(%s_CFLAGS) -o bin/%s %s\n\n",
+                "\t$(CC) -c $(%s_CFLAGS) -o %s %s\n\n",
                 project->projectName,
-                objectFile,
+                objectPath,
                 sourceFile);
 
         // Should move instead of appending. That way we do not allocate and
