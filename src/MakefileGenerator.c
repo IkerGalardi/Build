@@ -98,14 +98,26 @@ void PBldAddProjectToMakefile(FILE *makefile, BldProject *project)
                 gccDefines,
                 gccIncludes,
                 cStandardVersion);
-        fprintf(makefile, "%s_LDFLAGS=$(LDFLAGS) $(LDFLAGS_DYNLIB)\n\n", project->projectName);
+
+        fprintf(makefile, "%s_LDFLAGS=$(LDFLAGS) $(LDFLAGS_DYNLIB)", project->projectName);
+        if (project->linkerScript != NULL) {
+            fprintf(makefile, " -T %s\n\n", project->linkerScript);
+        } else {
+            fprintf(makefile, "\n\n");
+        }
     } else {
         fprintf(makefile, "%s_CFLAGS=$(CFLAGS) %s %s %s\n",
                 project->projectName,
                 gccDefines,
                 gccIncludes,
                 cStandardVersion);
-        fprintf(makefile, "%s_LDFLAGS=$(LDFLAGS)\n\n", project->projectName);
+
+        fprintf(makefile, "%s_LDFLAGS=$(LDFLAGS)", project->projectName);
+        if (project->linkerScript != NULL) {
+            fprintf(makefile, " -T%s\n\n", project->linkerScript);
+        } else {
+            fprintf(makefile, "\n\n");
+        }
     }
     free(gccIncludes);
     free(gccDefines);
