@@ -218,13 +218,14 @@ void PBldAddProjectToMakefile(FILE *makefile, BldProject *project)
                 project->projectName,
                 project->projectName);
         fprintf(makefile,
-                "\t$(AR) rcs bin/" PLAT_STATICLIB_TEMPLATE " $(%s_OBJ)\n\n",
+                "\t$(AR) rcs " PLAT_STATICLIB_TEMPLATE " $(%s_OBJ)\n\n",
                 project->projectName,
                 project->projectName);
     } else {
         assert(false);
     }
 
+    fprintf(makefile, "-include bin/%s/*.d\n\n", project->projectName);
 }
 
 void PBldGenerateMakefile(FILE *makefile,
@@ -270,8 +271,6 @@ void PBldGenerateMakefile(FILE *makefile,
             fprintf(makefile, "TO_CLEAN+=bin/" PLAT_STATICLIB_TEMPLATE "\n\n", project->projectName);
         }
     }
-
-    fprintf(makefile, "-include bin/*.d\n");
 
     fprintf(makefile, "clean:\n");
     fprintf(makefile, "\trm -f $(TO_CLEAN)\n");
