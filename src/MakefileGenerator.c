@@ -198,7 +198,7 @@ void PBldAddProjectToMakefile(FILE *makefile, BldProject *project)
                 project->projectName,
                 project->projectName);
         fprintf(makefile,
-                "\t$(CC) $(%s_LDFLAGS) $(%s_OBJ) -o " PLAT_EXE_TEMPLATE "\n\n",
+                "\t$(CC) $(%s_LDFLAGS) $(%s_OBJ) -o bin/" PLAT_EXE_TEMPLATE "\n\n",
                 project->projectName,
                 project->projectName,
                 project->projectName);
@@ -208,7 +208,7 @@ void PBldAddProjectToMakefile(FILE *makefile, BldProject *project)
                 project->projectName,
                 project->projectName);
         fprintf(makefile,
-                "\t$(CC) -shared $(%s_LDFLAGS) $(%s_OBJ) -o " PLAT_DYNLIB_TEMPLATE "\n\n",
+                "\t$(CC) -shared $(%s_LDFLAGS) $(%s_OBJ) -o bin/" PLAT_DYNLIB_TEMPLATE "\n\n",
                 project->projectName,
                 project->projectName,
                 project->projectName);
@@ -218,7 +218,7 @@ void PBldAddProjectToMakefile(FILE *makefile, BldProject *project)
                 project->projectName,
                 project->projectName);
         fprintf(makefile,
-                "\t$(AR) rcs " PLAT_STATICLIB_TEMPLATE " $(%s_OBJ)\n\n",
+                "\t$(AR) rcs bin/" PLAT_STATICLIB_TEMPLATE " $(%s_OBJ)\n\n",
                 project->projectName,
                 project->projectName);
     } else {
