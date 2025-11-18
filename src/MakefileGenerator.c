@@ -263,11 +263,11 @@ void PBldGenerateMakefile(FILE *makefile,
         fprintf(makefile, "TO_CLEAN+=$(%s_DEP)\n", project->projectName);
 
         if (project->type == BLD_EXECUTABLE) {
-            fprintf(makefile, "TO_CLEAN+=" PLAT_EXE_TEMPLATE "\n\n", project->projectName);
+            fprintf(makefile, "TO_CLEAN+=bin/" PLAT_EXE_TEMPLATE "\n\n", project->projectName);
         } else if (project->type == BLD_DYNAMIC_LIBRARY) {
-            fprintf(makefile, "TO_CLEAN+=" PLAT_DYNLIB_TEMPLATE "\n\n", project->projectName);
+            fprintf(makefile, "TO_CLEAN+=bin/" PLAT_DYNLIB_TEMPLATE "\n\n", project->projectName);
         } else if (project->type == BLD_STATIC_LIBRARY) {
-            fprintf(makefile, "TO_CLEAN+=" PLAT_STATICLIB_TEMPLATE "\n\n", project->projectName);
+            fprintf(makefile, "TO_CLEAN+=bin/" PLAT_STATICLIB_TEMPLATE "\n\n", project->projectName);
         }
     }
 
