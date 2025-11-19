@@ -101,7 +101,7 @@ void BldGenerate(BldProject *defaultTarget)
 
     for (size_t i = 0; i < projectIndex; i++) {
         char commandBuffer[255] = {0};
-        snprintf(commandBuffer, 254, "mkdir -p bin/%s", projects[i].projectName);
+        snprintf(commandBuffer, 254, "mkdir -p bin/%s.d", projects[i].projectName);
         system(commandBuffer);
     }
 }

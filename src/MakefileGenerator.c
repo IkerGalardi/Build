@@ -141,25 +141,27 @@ void PBldAddProjectToMakefile(FILE *makefile, BldProject *project)
         assert(extPointer != NULL);
         *(extPointer) = '\0';
 
+        // Path: "bin/projecname.d/source.o"
         const size_t objectPathLength = strlen("bin/") +
                                         strlen(project->projectName) +
                                         strlen(objectFile) +
-                                        4;
+                                        6;
         char *objectPath = malloc(objectPathLength + 1);
         snprintf(objectPath,
                  objectPathLength,
-                 "bin/%s/%s.o",
+                 "bin/%s.d/%s.o",
                  project->projectName,
                  objectFile);
 
+        // Path: "bin/projecname.d/source.d"
         const size_t dependencyPathLength = strlen("bin/") +
                                             strlen(project->projectName) +
                                             strlen(dependencyFile) +
-                                            4;
+                                            6;
         char *dependencyPath = malloc(dependencyPathLength + 1);
         snprintf(dependencyPath,
                  dependencyPathLength,
-                 "bin/%s/%s.d",
+                 "bin/%s.d/%s.d",
                  project->projectName,
                  dependencyFile);
 
