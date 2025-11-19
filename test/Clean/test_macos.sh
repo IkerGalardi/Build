@@ -2,7 +2,7 @@ echo "Clean test"
 
 set -e
 
-cc -o Build Build.c -L../../ -lBuild -I../../include > /dev/null
+cc -o Build Build.c -L./ -lBuild -I../../include > /dev/null
 ./Build
 
 make > /dev/null
