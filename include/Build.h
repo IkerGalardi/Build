@@ -29,17 +29,17 @@ BldProject *BldNewProject(char *projectName,
                           BldProjectType type,
                           BldLanguage language);
 
-#define BldSetSources(project, ...) PBldSetSources(project, __VA_ARGS__, NULL)
-void PBldSetSources(BldProject *project, ...);
+#define BldAddSources(project, ...) PBldAddSources(project, __VA_ARGS__, NULL)
+void PBldAddSources(BldProject *project, ...);
 
-#define BldSetIncludePaths(project, ...) PBldSetIncludePaths(project, __VA_ARGS__, NULL)
-void PBldSetIncludePaths(BldProject *project, ...);
+#define BldAddIncludePaths(project, ...) PBldAddIncludePaths(project, __VA_ARGS__, NULL)
+void PBldAddIncludePaths(BldProject *project, ...);
 
-#define BldSetDependencies(project, ...) PBldSetDependencies(project, __VA_ARGS__, NULL)
-void PBldSetDependencies(BldProject *project, ...);
+#define BldAddDependencies(project, ...) PBldAddDependencies(project, __VA_ARGS__, NULL)
+void PBldAddDependencies(BldProject *project, ...);
 
-#define BldSetDefines(project, ...) PBldSetDefines(project, __VA_ARGS__, NULL)
-void PBldSetDefines(BldProject *project, ...);
+#define BldAddDefines(project, ...) PBldAddDefines(project, __VA_ARGS__, NULL)
+void PBldAddDefines(BldProject *project, ...);
 
 void BldSetLinkerScript(BldProject *project, char *linkerScript);
 

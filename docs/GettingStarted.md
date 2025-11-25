@@ -15,12 +15,12 @@ BldProject *exe = BldNewProject("ProjectName",
 
 After creating the project, we need to configure it by adding source
 files and configure additional include directories if necessary. For
-that, we will use the `BldSetSources` and `BldSetIncludePaths`
+that, we will use the `BldAddSources` and `BldAddIncludePaths`
 functions as seen in the next example:
 
 ```c
-BldSetSources(exe, "src/main.c", "src/utils.c");
-BldSetIncludePaths(exe, "include");
+BldAddSources(exe, "src/main.c", "src/utils.c");
+BldAddIncludePaths(exe, "include");
 ```
 
 After configuring the project, we need to call to the `BldGenerate`
