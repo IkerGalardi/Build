@@ -28,6 +28,7 @@ BldProject *BldNewProject(char *projectName,
     project->sources = UtilCreateStringArray();
     project->includePaths = UtilCreateStringArray();
     project->defines = UtilCreateStringArray();
+    project->dependencies = UtilCreateStringArray();
     project->language = language;
     project->linkerScript = NULL;
 
@@ -77,6 +78,22 @@ void PBldAddDefines(BldProject *project, ...)
     while (define != NULL) {
         UtilAppendToStringArray(&project->defines, define);
         define = va_arg(ap, char *);
+    }
+
+    va_end(ap);
+}
+
+void PBldAddProjectDependencies(BldProject *project, ...)
+{
+    va_list ap;
+    va_start(ap, project);
+
+    assert(project != NULL);
+
+    char *dependency = va_arg(ap, char *);
+    while (dependency != NULL) {
+        UtilAppendToStringArray(&project->dependencies, dependency);
+        dependency = va_arg(ap, char *);
     }
 
     va_end(ap);
