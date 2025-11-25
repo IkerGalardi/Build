@@ -61,6 +61,32 @@ static char *PBldIncludesToGccStyle(UtilStringArray includePaths)
     return result;
 }
 
+static char *PBldDependenciesToGccStyleLibs(UtilStringArray dependencies)
+{
+    char *result = NULL;
+    size_t resultLength = 0;
+
+    if (dependencies.stringCount == 0) {
+        result = malloc(1);
+        *result = '\0';
+        return result;
+    }
+
+    for (size_t i = 0; i < dependencies.stringCount; i++) {
+        char *token = dependencies.data[i];
+
+        size_t tokenLength = strlen(token);
+        result = realloc(result, resultLength + 2 + tokenLength + 1);
+        resultLength = resultLength + 2 + tokenLength;
+
+        strncat(result, "-l", resultLength);
+        strncat(result, token, resultLength);
+        strncat(result, " ", resultLength);
+    }
+
+    return result;
+}
+
 void PBldAddProjectToMakefile(FILE *makefile, BldProject *project)
 {
     // TODO: too many allocations :S
@@ -92,6 +118,7 @@ void PBldAddProjectToMakefile(FILE *makefile, BldProject *project)
 
     char *gccDefines = PBldDefinesToGccStyle(project->defines);
     char *gccIncludes = PBldIncludesToGccStyle(project->includePaths);
+    char *gccLibraries = PBldDependenciesToGccStyleLibs(project->dependencies);
     if (project->type == BLD_DYNAMIC_LIBRARY) {
         fprintf(makefile, "%s_CFLAGS=$(CFLAGS) $(CFLAGS_DYNLIB) %s %s %s\n",
                 project->projectName,
@@ -99,7 +126,9 @@ void PBldAddProjectToMakefile(FILE *makefile, BldProject *project)
                 gccIncludes,
                 cStandardVersion);
 
-        fprintf(makefile, "%s_LDFLAGS=$(LDFLAGS) $(LDFLAGS_DYNLIB)", project->projectName);
+        fprintf(makefile, "%s_LDFLAGS=$(LDFLAGS) $(LDFLAGS_DYNLIB) %s",
+                project->projectName,
+                gccLibraries);
         if (project->linkerScript != NULL) {
             fprintf(makefile, " -T %s\n\n", project->linkerScript);
         } else {
@@ -112,7 +141,9 @@ void PBldAddProjectToMakefile(FILE *makefile, BldProject *project)
                 gccIncludes,
                 cStandardVersion);
 
-        fprintf(makefile, "%s_LDFLAGS=$(LDFLAGS)", project->projectName);
+        fprintf(makefile, "%s_LDFLAGS=$(LDFLAGS) %s",
+                project->projectName,
+                gccLibraries);
         if (project->linkerScript != NULL) {
             fprintf(makefile, " -T%s\n\n", project->linkerScript);
         } else {
@@ -273,6 +304,7 @@ void PBldGenerateMakefile(FILE *makefile,
 
     fprintf(makefile, "CFLAGS=-Wall -Wextra -MMD\n");
     fprintf(makefile, "CFLAGS_DYNLIB=-fPIC\n");
+    fprintf(makefile, "LDFLAGS=-Lbin/\n\n");
     fprintf(makefile, "LDFLAGS_DYNLIB=-fPIC\n\n");
 
     fprintf(makefile, "TO_CLEAN=\n\n");
