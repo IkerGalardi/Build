@@ -83,7 +83,7 @@ void PBldAddDefines(BldProject *project, ...)
     va_end(ap);
 }
 
-void PBldAddProjectDependencies(BldProject *project, ...)
+void PBldAddDependencies(BldProject *project, ...)
 {
     va_list ap;
     va_start(ap, project);

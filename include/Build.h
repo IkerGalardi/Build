@@ -41,8 +41,8 @@ void PBldAddDependencies(BldProject *project, ...);
 #define BldAddDefines(project, ...) PBldAddDefines(project, __VA_ARGS__, NULL)
 void PBldAddDefines(BldProject *project, ...);
 
-#define BldAddProjectDependencies(project, ...) PBldAddProjectDependencies(project, __VA_ARGS__, NULL)
-void PBldAddProjectDependencies(BldProject *project, ...);
+#define BldAddDependencies(project, ...) PBldAddDependencies(project, __VA_ARGS__, NULL)
+void PBldAddDependencies(BldProject *project, ...);
 
 void BldSetLinkerScript(BldProject *project, char *linkerScript);
 
