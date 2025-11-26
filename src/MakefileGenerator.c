@@ -227,11 +227,11 @@ void PBldAddProjectToMakefile(FILE *makefile, BldProject *project)
 
     if (project->type == BLD_EXECUTABLE) {
         fprintf(makefile,
-                PLAT_EXE_TEMPLATE ": $(%s_OBJ)\n",
+                "bin/" PLAT_EXE_TEMPLATE ": $(%s_OBJ)\n",
                 project->projectName,
                 project->projectName);
         fprintf(makefile,
-                "\t$(CC) $(%s_LDFLAGS) $(%s_OBJ) -o " PLAT_EXE_TEMPLATE "\n\n",
+                "\t$(CC) $(%s_LDFLAGS) $(%s_OBJ) -o bin/" PLAT_EXE_TEMPLATE "\n\n",
                 project->projectName,
                 project->projectName,
                 project->projectName);
@@ -254,22 +254,22 @@ void PBldAddProjectToMakefile(FILE *makefile, BldProject *project)
                     project->projectName);
         } else {
             fprintf(makefile,
-                    PLAT_DYNLIB_TEMPLATE ": $(%s_OBJ)\n",
+                    "bin/" PLAT_DYNLIB_TEMPLATE ": $(%s_OBJ)\n",
                     project->projectName,
                     project->projectName);
             fprintf(makefile,
-                    "\t$(CC) -shared $(%s_LDFLAGS) $(%s_OBJ) -o " PLAT_DYNLIB_TEMPLATE "\n\n",
+                    "\t$(CC) -shared $(%s_LDFLAGS) $(%s_OBJ) -o bin/" PLAT_DYNLIB_TEMPLATE "\n\n",
                     project->projectName,
                     project->projectName,
                     project->projectName);
         }
     } else if (project-> type == BLD_STATIC_LIBRARY) {
         fprintf(makefile,
-                PLAT_STATICLIB_TEMPLATE ": $(%s_OBJ)\n",
+                "bin/" PLAT_STATICLIB_TEMPLATE ": $(%s_OBJ)\n",
                 project->projectName,
                 project->projectName);
         fprintf(makefile,
-                "\t$(AR) rcs " PLAT_STATICLIB_TEMPLATE " $(%s_OBJ)\n\n",
+                "\t$(AR) rcs bin/" PLAT_STATICLIB_TEMPLATE " $(%s_OBJ)\n\n",
                 project->projectName,
                 project->projectName);
     } else {
@@ -289,17 +289,11 @@ void PBldGenerateMakefile(FILE *makefile,
     assert(projects != NULL);
 
     if (defaultTarget->type == BLD_EXECUTABLE) {
-        fprintf(makefile, "all: " PLAT_EXE_TEMPLATE "\n\n", defaultTarget->projectName);
+        fprintf(makefile, "all: bin/" PLAT_EXE_TEMPLATE "\n\n", defaultTarget->projectName);
     } else if (defaultTarget->type == BLD_DYNAMIC_LIBRARY) {
-        // Workaround with setting the library path direcly to bin/name. For
-        // some reason everything stops working.
-        if (PLAT_IS_APPLE) {
-            fprintf(makefile, "all: bin/" PLAT_DYNLIB_TEMPLATE "\n\n", defaultTarget->projectName);
-        } else {
-            fprintf(makefile, "all: " PLAT_DYNLIB_TEMPLATE "\n\n", defaultTarget->projectName);
-        }
+        fprintf(makefile, "all: bin/" PLAT_DYNLIB_TEMPLATE "\n\n", defaultTarget->projectName);
     } else if (defaultTarget->type == BLD_STATIC_LIBRARY) {
-        fprintf(makefile, "all: " PLAT_STATICLIB_TEMPLATE "\n\n", defaultTarget->projectName);
+        fprintf(makefile, "all: bin/" PLAT_STATICLIB_TEMPLATE "\n\n", defaultTarget->projectName);
     }
 
     fprintf(makefile, "CFLAGS=-Wall -Wextra -MMD\n");
@@ -322,17 +316,11 @@ void PBldGenerateMakefile(FILE *makefile,
         fprintf(makefile, "TO_CLEAN+=$(%s_DEP)\n", project->projectName);
 
         if (project->type == BLD_EXECUTABLE) {
-            fprintf(makefile, "TO_CLEAN+=" PLAT_EXE_TEMPLATE "\n\n", project->projectName);
+            fprintf(makefile, "TO_CLEAN+=bin/" PLAT_EXE_TEMPLATE "\n\n", project->projectName);
         } else if (project->type == BLD_DYNAMIC_LIBRARY) {
-            // Workaround with setting the library path direcly to bin/name. For
-            // some reason everything stops working.
-            if (PLAT_IS_APPLE) {
-                fprintf(makefile, "TO_CLEAN+=bin/" PLAT_DYNLIB_TEMPLATE "\n\n", project->projectName);
-            } else {
-                fprintf(makefile, "TO_CLEAN+=" PLAT_DYNLIB_TEMPLATE "\n\n", project->projectName);
-            }
+            fprintf(makefile, "TO_CLEAN+=bin/" PLAT_DYNLIB_TEMPLATE "\n\n", project->projectName);
         } else if (project->type == BLD_STATIC_LIBRARY) {
-            fprintf(makefile, "TO_CLEAN+=" PLAT_STATICLIB_TEMPLATE "\n\n", project->projectName);
+            fprintf(makefile, "TO_CLEAN+=bin/" PLAT_STATICLIB_TEMPLATE "\n\n", project->projectName);
         }
     }
 
