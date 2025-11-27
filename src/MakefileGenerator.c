@@ -88,6 +88,40 @@ static char *PBldDependenciesToGccStyleLibs(PBldProjectArray dependencies)
     return result;
 }
 
+char *PBldDependenciesToFileNames(PBldProjectArray dependencies)
+{
+    char *string = NULL;
+    size_t stringSize = 0;
+
+    if (dependencies.projectCount == 0) {
+        string = malloc(1);
+        *string = '\0';
+        return string;
+    }
+
+    for (size_t i = 0; i < dependencies.projectCount; i++) {
+        BldProject *project = &dependencies.data[i];
+
+        char projectPath[128] = {0};
+        if (project->type == BLD_EXECUTABLE) {
+            snprintf(projectPath, 127, " bin/" PLAT_EXE_TEMPLATE, project->projectName);
+        } else if (project->type == BLD_DYNAMIC_LIBRARY) {
+            snprintf(projectPath, 127, " bin/" PLAT_DYNLIB_TEMPLATE, project->projectName);
+        } else if (project->type == BLD_STATIC_LIBRARY) {
+            snprintf(projectPath, 127, " bin/" PLAT_STATICLIB_TEMPLATE, project->projectName);
+        } else {
+            assert(false);
+        }
+
+        stringSize += strlen(projectPath);
+        string = realloc(string, stringSize + 1);
+
+        strncat(string, projectPath, stringSize);
+    }
+
+    return string;
+}
+
 void PBldAddProjectToMakefile(FILE *makefile, BldProject *project)
 {
     // TODO: too many allocations :S
@@ -226,11 +260,13 @@ void PBldAddProjectToMakefile(FILE *makefile, BldProject *project)
 
     fprintf(makefile, "\n\n");
 
+    char *finalDependencies = PBldDependenciesToFileNames(project->dependencies);
     if (project->type == BLD_EXECUTABLE) {
         fprintf(makefile,
-                "bin/" PLAT_EXE_TEMPLATE ": $(%s_OBJ)\n",
+                "bin/" PLAT_EXE_TEMPLATE ": $(%s_OBJ) %s\n",
                 project->projectName,
-                project->projectName);
+                project->projectName,
+                finalDependencies);
         fprintf(makefile,
                 "\t$(CC) $(%s_LDFLAGS) $(%s_OBJ) -o bin/" PLAT_EXE_TEMPLATE "\n\n",
                 project->projectName,
@@ -241,9 +277,10 @@ void PBldAddProjectToMakefile(FILE *makefile, BldProject *project)
         // some reason everything stops working.
         if (PLAT_IS_APPLE) {
             fprintf(makefile,
-                    "bin/" PLAT_DYNLIB_TEMPLATE ": $(%s_OBJ)\n",
+                    "bin/" PLAT_DYNLIB_TEMPLATE ": $(%s_OBJ) %s\n",
                     project->projectName,
-                    project->projectName);
+                    project->projectName,
+                    finalDependencies);
             fprintf(makefile,
                     "\t$(CC) -shared $(%s_LDFLAGS) $(%s_OBJ) -o " PLAT_DYNLIB_TEMPLATE "\n\n",
                     project->projectName,
@@ -255,9 +292,10 @@ void PBldAddProjectToMakefile(FILE *makefile, BldProject *project)
                     project->projectName);
         } else {
             fprintf(makefile,
-                    "bin/" PLAT_DYNLIB_TEMPLATE ": $(%s_OBJ)\n",
+                    "bin/" PLAT_DYNLIB_TEMPLATE ": $(%s_OBJ) %s\n",
                     project->projectName,
-                    project->projectName);
+                    project->projectName,
+                    finalDependencies);
             fprintf(makefile,
                     "\t$(CC) -shared $(%s_LDFLAGS) $(%s_OBJ) -o bin/" PLAT_DYNLIB_TEMPLATE "\n\n",
                     project->projectName,
@@ -266,9 +304,10 @@ void PBldAddProjectToMakefile(FILE *makefile, BldProject *project)
         }
     } else if (project-> type == BLD_STATIC_LIBRARY) {
         fprintf(makefile,
-                "bin/" PLAT_STATICLIB_TEMPLATE ": $(%s_OBJ)\n",
+                "bin/" PLAT_STATICLIB_TEMPLATE ": $(%s_OBJ) %s\n",
                 project->projectName,
-                project->projectName);
+                project->projectName,
+                finalDependencies);
         fprintf(makefile,
                 "\t$(AR) rcs bin/" PLAT_STATICLIB_TEMPLATE " $(%s_OBJ)\n\n",
                 project->projectName,
