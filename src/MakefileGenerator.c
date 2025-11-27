@@ -62,19 +62,19 @@ static char *PBldIncludesToGccStyle(PBldStringArray includePaths)
     return result;
 }
 
-static char *PBldDependenciesToGccStyleLibs(PBldStringArray dependencies)
+static char *PBldDependenciesToGccStyleLibs(PBldProjectArray dependencies)
 {
     char *result = NULL;
     size_t resultLength = 0;
 
-    if (dependencies.stringCount == 0) {
+    if (dependencies.projectCount == 0) {
         result = malloc(1);
         *result = '\0';
         return result;
     }
 
-    for (size_t i = 0; i < dependencies.stringCount; i++) {
-        char *token = dependencies.data[i];
+    for (size_t i = 0; i < dependencies.projectCount; i++) {
+        char *token = dependencies.data[i].projectName;
 
         size_t tokenLength = strlen(token);
         result = realloc(result, resultLength + 2 + tokenLength + 1);

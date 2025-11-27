@@ -28,7 +28,7 @@ BldProject *BldNewProject(char *projectName,
     project->sources = PBldCreateStringArray();
     project->includePaths = PBldCreateStringArray();
     project->defines = PBldCreateStringArray();
-    project->dependencies = PBldCreateStringArray();
+    project->dependencies = PBldCreateProjectArray();
     project->language = language;
     project->linkerScript = NULL;
 
@@ -90,10 +90,10 @@ void PBldAddDependencies(BldProject *project, ...)
 
     assert(project != NULL);
 
-    char *dependency = va_arg(ap, char *);
+    BldProject *dependency = va_arg(ap, BldProject *);
     while (dependency != NULL) {
-        PBldAppendToStringArray(&project->dependencies, dependency);
-        dependency = va_arg(ap, char *);
+        PBldAppendToProjectArray(&project->dependencies, dependency);
+        dependency = va_arg(ap, BldProject *);
     }
 
     va_end(ap);

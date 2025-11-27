@@ -4,6 +4,8 @@
 #include <assert.h>
 #include <string.h>
 
+#include "Project.h"
+
 PBldStringArray PBldCreateStringArray()
 {
     PBldStringArray sa;
@@ -26,4 +28,22 @@ void PBldAppendToStringArray(PBldStringArray *sa, char *string)
     assert(strcmp(newString, string) == 0);
 
     sa->data[sa->stringCount - 1] = newString;
+}
+
+PBldProjectArray PBldCreateProjectArray()
+{
+    PBldProjectArray pa;
+    pa.projectCount = 0;
+    pa.data = NULL;
+
+    return pa;
+}
+
+void PBldAppendToProjectArray(PBldProjectArray *pa, BldProject *project)
+{
+    pa->projectCount++;
+    pa->data = realloc(pa->data, sizeof(BldProject) * pa->projectCount);
+    assert(pa->data != NULL);
+
+    memcpy(&pa->data[pa->projectCount - 1], project, sizeof(BldProject));
 }
