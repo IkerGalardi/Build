@@ -4,16 +4,16 @@
 #include <assert.h>
 #include <string.h>
 
-UtilStringArray UtilCreateStringArray()
+PBldStringArray PBldCreateStringArray()
 {
-    UtilStringArray sa;
+    PBldStringArray sa;
     sa.stringCount = 0;
     sa.data = NULL;
 
     return sa;
 }
 
-void UtilAppendToStringArray(UtilStringArray *sa, char *string)
+void PBldAppendToStringArray(PBldStringArray *sa, char *string)
 {
     sa->stringCount++;
     sa->data = realloc(sa->data, sizeof(char*) * sa->stringCount);

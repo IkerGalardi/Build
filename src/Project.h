@@ -8,10 +8,10 @@ typedef struct BldProject
 {
     char projectName[64];
     BldProjectType type;
-    UtilStringArray sources;
-    UtilStringArray includePaths;
-    UtilStringArray defines;
-    UtilStringArray dependencies;
+    PBldStringArray sources;
+    PBldStringArray includePaths;
+    PBldStringArray defines;
+    PBldStringArray dependencies;
     BldLanguage language;
     char *linkerScript;
 } BldProject;

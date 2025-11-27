@@ -5,11 +5,12 @@
 #include <string.h>
 #include <libgen.h>
 #include <assert.h>
+#include <stdbool.h>
 
 #include "Project.h"
 #include "Util.h"
 
-static char *PBldDefinesToGccStyle(UtilStringArray defines)
+static char *PBldDefinesToGccStyle(PBldStringArray defines)
 {
     char *result = NULL;
     size_t resultLength = 0;
@@ -35,7 +36,7 @@ static char *PBldDefinesToGccStyle(UtilStringArray defines)
     return result;
 }
 
-static char *PBldIncludesToGccStyle(UtilStringArray includePaths)
+static char *PBldIncludesToGccStyle(PBldStringArray includePaths)
 {
     char *result = NULL;
     size_t resultLength = 0;
@@ -61,7 +62,7 @@ static char *PBldIncludesToGccStyle(UtilStringArray includePaths)
     return result;
 }
 
-static char *PBldDependenciesToGccStyleLibs(UtilStringArray dependencies)
+static char *PBldDependenciesToGccStyleLibs(PBldStringArray dependencies)
 {
     char *result = NULL;
     size_t resultLength = 0;
@@ -153,8 +154,8 @@ void PBldAddProjectToMakefile(FILE *makefile, BldProject *project)
     free(gccIncludes);
     free(gccDefines);
 
-    UtilStringArray objectFiles = UtilCreateStringArray();
-    UtilStringArray dependencyFiles = UtilCreateStringArray();
+    PBldStringArray objectFiles = PBldCreateStringArray();
+    PBldStringArray dependencyFiles = PBldCreateStringArray();
 
     for (size_t i = 0; i < project->sources.stringCount; i++) {
         char *sourceFile = project->sources.data[i];
@@ -205,8 +206,8 @@ void PBldAddProjectToMakefile(FILE *makefile, BldProject *project)
 
         // Should move instead of appending. That way we do not allocate and
         // free the same string.
-        UtilAppendToStringArray(&objectFiles, objectPath);
-        UtilAppendToStringArray(&dependencyFiles, dependencyPath);
+        PBldAppendToStringArray(&objectFiles, objectPath);
+        PBldAppendToStringArray(&dependencyFiles, dependencyPath);
         free(objectFile);
         free(dependencyFile);
         free(objectPath);

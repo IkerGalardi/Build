@@ -25,10 +25,10 @@ BldProject *BldNewProject(char *projectName,
     memset(project->projectName, 0, 64);
     strncpy(project->projectName, projectName, 63);
     project->type = type;
-    project->sources = UtilCreateStringArray();
-    project->includePaths = UtilCreateStringArray();
-    project->defines = UtilCreateStringArray();
-    project->dependencies = UtilCreateStringArray();
+    project->sources = PBldCreateStringArray();
+    project->includePaths = PBldCreateStringArray();
+    project->defines = PBldCreateStringArray();
+    project->dependencies = PBldCreateStringArray();
     project->language = language;
     project->linkerScript = NULL;
 
@@ -45,7 +45,7 @@ void PBldAddSources(BldProject *project,
 
     char *source = va_arg(ap, char *);
     while (source != NULL) {
-        UtilAppendToStringArray(&project->sources, source);
+        PBldAppendToStringArray(&project->sources, source);
         source = va_arg(ap, char *);
     }
     va_end(ap);
@@ -61,7 +61,7 @@ void PBldAddIncludePaths(BldProject *project,
 
     char *includePath = va_arg(ap, char *);
     while (includePath != NULL) {
-        UtilAppendToStringArray(&project->includePaths, includePath);
+        PBldAppendToStringArray(&project->includePaths, includePath);
         includePath = va_arg(ap, char *);
     }
     va_end(ap);
@@ -76,7 +76,7 @@ void PBldAddDefines(BldProject *project, ...)
 
     char *define = va_arg(ap, char *);
     while (define != NULL) {
-        UtilAppendToStringArray(&project->defines, define);
+        PBldAppendToStringArray(&project->defines, define);
         define = va_arg(ap, char *);
     }
 
@@ -92,7 +92,7 @@ void PBldAddDependencies(BldProject *project, ...)
 
     char *dependency = va_arg(ap, char *);
     while (dependency != NULL) {
-        UtilAppendToStringArray(&project->dependencies, dependency);
+        PBldAppendToStringArray(&project->dependencies, dependency);
         dependency = va_arg(ap, char *);
     }
 

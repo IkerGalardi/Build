@@ -7,10 +7,10 @@ typedef struct
 {
     char **data;
     size_t stringCount;
-} UtilStringArray;
+} PBldStringArray;
 
-UtilStringArray UtilCreateStringArray();
+PBldStringArray PBldCreateStringArray();
 
-void UtilAppendToStringArray(UtilStringArray *sa, char *string);
+void PBldAppendToStringArray(PBldStringArray *sa, char *string);
 
 #endif // UTIL_H
