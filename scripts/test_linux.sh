@@ -54,4 +54,13 @@ else
 fi
 cd ../..
 
+cd test/LocalDependency
+if sh test.sh
+then
+    true
+else
+    RETURN="1"
+fi
+cd ../..
+
 exit $RETURN
