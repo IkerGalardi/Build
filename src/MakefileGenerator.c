@@ -12,12 +12,10 @@
 
 static char *PBldDefinesToGccStyle(PBldStringArray defines)
 {
-    char *result = NULL;
+    char *result = calloc(1, 1);
     size_t resultLength = 0;
 
     if (defines.stringCount == 0) {
-        result = malloc(1);
-        *result = '\0';
         return result;
     }
 
@@ -38,12 +36,10 @@ static char *PBldDefinesToGccStyle(PBldStringArray defines)
 
 static char *PBldIncludesToGccStyle(PBldStringArray includePaths)
 {
-    char *result = NULL;
+    char *result = calloc(1, 1);
     size_t resultLength = 0;
 
     if (includePaths.stringCount == 0) {
-        result = malloc(1);
-        *result = '\0';
         return result;
     }
 
@@ -64,12 +60,10 @@ static char *PBldIncludesToGccStyle(PBldStringArray includePaths)
 
 static char *PBldDependenciesToGccStyleLibs(PBldProjectArray dependencies)
 {
-    char *result = NULL;
+    char *result = calloc(1, 1);
     size_t resultLength = 0;
 
     if (dependencies.projectCount == 0) {
-        result = malloc(1);
-        *result = '\0';
         return result;
     }
 
@@ -90,12 +84,10 @@ static char *PBldDependenciesToGccStyleLibs(PBldProjectArray dependencies)
 
 char *PBldDependenciesToFileNames(PBldProjectArray dependencies)
 {
-    char *string = NULL;
+    char *string = calloc(1, 1);
     size_t stringSize = 0;
 
     if (dependencies.projectCount == 0) {
-        string = malloc(1);
-        *string = '\0';
         return string;
     }
 
@@ -195,13 +187,13 @@ void PBldAddProjectToMakefile(FILE *makefile, BldProject *project)
         char *sourceFile = project->sources.data[i];
 
         const size_t sourceFileLength = strlen(basename(sourceFile));
-        char *objectFile = malloc(sourceFileLength + 1);
+        char *objectFile = calloc(sourceFileLength + 1, 1);
         strncpy(objectFile, basename(sourceFile), sourceFileLength);
         char *extPointer = strrchr(objectFile, '.');
         assert(extPointer != NULL);
         *(extPointer) = '\0';
 
-        char *dependencyFile = malloc(sourceFileLength + 1);
+        char *dependencyFile = calloc(sourceFileLength + 1, 1);
         strncpy(dependencyFile, basename(sourceFile), sourceFileLength);
         extPointer = strrchr(dependencyFile, '.');
         assert(extPointer != NULL);
@@ -212,7 +204,7 @@ void PBldAddProjectToMakefile(FILE *makefile, BldProject *project)
                                         strlen(project->projectName) +
                                         strlen(objectFile) +
                                         6;
-        char *objectPath = malloc(objectPathLength + 1);
+        char *objectPath = calloc(objectPathLength + 1, 1);
         snprintf(objectPath,
                  objectPathLength,
                  "bin/%s.d/%s.o",
@@ -224,7 +216,7 @@ void PBldAddProjectToMakefile(FILE *makefile, BldProject *project)
                                             strlen(project->projectName) +
                                             strlen(dependencyFile) +
                                             6;
-        char *dependencyPath = malloc(dependencyPathLength + 1);
+        char *dependencyPath = calloc(dependencyPathLength + 1, 1);
         snprintf(dependencyPath,
                  dependencyPathLength,
                  "bin/%s.d/%s.d",
