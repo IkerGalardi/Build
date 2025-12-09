@@ -6,11 +6,11 @@
 
 int main()
 {
-    UtilStringArray sa = UtilCreateStringArray();
+    PBldStringArray sa = PBldCreateStringArray();
 
-    UtilAppendToStringArray(&sa, "First");
-    UtilAppendToStringArray(&sa, "Second");
-    UtilAppendToStringArray(&sa, "Third");
+    PBldAppendToStringArray(&sa, "First");
+    PBldAppendToStringArray(&sa, "Second");
+    PBldAppendToStringArray(&sa, "Third");
 
     bool condition = strcmp(sa.data[0], "First") == 0 &&
                      strcmp(sa.data[1], "Second") == 0 &&
