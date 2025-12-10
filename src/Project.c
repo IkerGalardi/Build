@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <assert.h>
+#include <libgen.h>
 
 #include "Project.h"
 #include "Generators.h"
@@ -13,6 +14,19 @@
 
 BldProject projects[100];
 size_t projectIndex = 0;
+
+void PBldAppendDependencyHeaderDirectories(PBldProjectArray projects,
+                                           PBldStringArray *includes)
+{
+    for (size_t i = 0; i < projects.projectCount; i++) {
+        BldProject *project = &projects.data[i];
+
+        for (size_t j = 0; j < project->publicHeaders.stringCount; j++) {
+            char *headerDir = dirname(project->publicHeaders.data[j]);
+            PBldAppendToStringArray(includes, headerDir);
+        }
+    }
+}
 
 BldProject *BldNewProject(char *projectName,
                           BldProjectType type,
@@ -127,6 +141,13 @@ void BldGenerate(BldProject *defaultTarget)
 
     FILE *makefile = fopen("Makefile", "w");
     assert(makefile != NULL);
+
+    for (size_t i = 0; i < projectIndex; i++) {
+        BldProject *project = &projects[i];
+
+        PBldAppendDependencyHeaderDirectories(project->dependencies,
+                                              &project->includePaths);
+    }
 
     PBldGenerateMakefile(makefile, defaultTarget, projects, projectIndex);
 
