@@ -1,5 +1,7 @@
 echo "Defines test"
 
+rm -rf bin/
+
 uname -a | grep Linux > /dev/null && export LD_LIBRARY_PATH=./
 
 set -e

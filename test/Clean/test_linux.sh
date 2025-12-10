@@ -2,6 +2,8 @@ echo "Clean test"
 
 export LD_LIBRARY_PATH=./
 
+rm -rf bin/
+
 set -e
 
 cc -o Build Build.c -L. -lBuild -I../../include > /dev/null

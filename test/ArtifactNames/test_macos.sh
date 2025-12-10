@@ -1,5 +1,7 @@
 echo "Artifact naming test"
 
+rm -rf bin/
+
 set -e
 
 cc -o Build Build.c -L. -lBuild -I../../include > /dev/null
