@@ -29,6 +29,7 @@ BldProject *BldNewProject(char *projectName,
     project->includePaths = PBldCreateStringArray();
     project->defines = PBldCreateStringArray();
     project->dependencies = PBldCreateProjectArray();
+    project->publicHeaders = PBldCreateStringArray();
     project->language = language;
     project->linkerScript = NULL;
 
@@ -94,6 +95,22 @@ void PBldAddDependencies(BldProject *project, ...)
     while (dependency != NULL) {
         PBldAppendToProjectArray(&project->dependencies, dependency);
         dependency = va_arg(ap, BldProject *);
+    }
+
+    va_end(ap);
+}
+
+void PBldAddPublicHeader(BldProject *project, ...)
+{
+    va_list ap;
+    va_start(ap, project);
+
+    assert(project != NULL);
+
+    char *publicHeader = va_arg(ap, char *);
+    while (publicHeader != NULL) {
+        PBldAppendToStringArray(&project->publicHeaders, publicHeader);
+        publicHeader = va_arg(ap, char *);
     }
 
     va_end(ap);

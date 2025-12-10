@@ -12,6 +12,7 @@ typedef struct BldProject
     PBldStringArray includePaths;
     PBldStringArray defines;
     PBldProjectArray dependencies;
+    PBldStringArray publicHeaders;
     BldLanguage language;
     char *linkerScript;
 } BldProject;
