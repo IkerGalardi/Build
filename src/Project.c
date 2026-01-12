@@ -60,6 +60,12 @@ void PBldAddSources(BldProject *project,
 
     char *source = va_arg(ap, char *);
     while (source != NULL) {
+        FILE *sourceFile = fopen(source, "r");
+        if (sourceFile == NULL) {
+            fprintf(stderr, "Build: source file %s does not exist\n", source);
+            exit(1);
+        }
+
         PBldAppendToStringArray(&project->sources, source);
         source = va_arg(ap, char *);
     }
