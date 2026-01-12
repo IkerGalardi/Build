@@ -63,4 +63,13 @@ else
 fi
 cd ../..
 
+cd test/FileCheck
+if sh test.sh
+then
+    true
+else
+    RETURN="1"
+fi
+cd ../..
+
 exit $RETURN
