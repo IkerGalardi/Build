@@ -35,17 +35,25 @@ void PBldAddSources(BldProject *project, ...);
 #define BldAddIncludePaths(project, ...) PBldAddIncludePaths(project, __VA_ARGS__, NULL)
 void PBldAddIncludePaths(BldProject *project, ...);
 
+void BldAddIncludePathArray(BldProject *project, char **includes, size_t nIncludes);
+
 #define BldAddDependencies(project, ...) PBldAddDependencies(project, __VA_ARGS__, NULL)
 void PBldAddDependencies(BldProject *project, ...);
 
+void BldAddDependencyArray(BldProject *project, BldProject **dependencies, size_t nDependencies);
+
 #define BldAddDefines(project, ...) PBldAddDefines(project, __VA_ARGS__, NULL)
 void PBldAddDefines(BldProject *project, ...);
+
+void BldAddDefinesArray(BldProject *project, char **defines, size_t nDefines);
 
 #define BldAddDependencies(project, ...) PBldAddDependencies(project, __VA_ARGS__, NULL)
 void PBldAddDependencies(BldProject *project, ...);
 
 #define BldAddPublicHeader(project, ...) PBldAddPublicHeader(project, __VA_ARGS__, NULL)
 void PBldAddPublicHeader(BldProject *project, ...);
+
+void BldAddPublicHeaderArray(BldProject *project, char **publicHeaders, size_t nPublicHeaders);
 
 void BldSetLinkerScript(BldProject *project, char *linkerScript);
 
