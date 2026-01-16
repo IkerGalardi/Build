@@ -88,6 +88,13 @@ void PBldAddIncludePaths(BldProject *project,
     va_end(ap);
 }
 
+void BldAddIncludePathArray(BldProject *project, char **includes, size_t nIncludes)
+{
+    for (size_t i = 0; i < nIncludes; i++) {
+        PBldAppendToStringArray(&project->includePaths, includes[i]);
+    }
+}
+
 void PBldAddDefines(BldProject *project, ...)
 {
     va_list ap;
@@ -102,6 +109,13 @@ void PBldAddDefines(BldProject *project, ...)
     }
 
     va_end(ap);
+}
+
+void BldAddDefinesArray(BldProject *project, char **defines, size_t nDefines)
+{
+    for (size_t i = 0; i < nDefines; i++) {
+        PBldAppendToStringArray(&project->defines, defines[i]);
+    }
 }
 
 void PBldAddDependencies(BldProject *project, ...)
@@ -120,6 +134,14 @@ void PBldAddDependencies(BldProject *project, ...)
     va_end(ap);
 }
 
+void BldAddDependencyArray(BldProject *project,
+                           BldProject **dependencies, size_t nDependencies)
+{
+    for (size_t i = 0; i < nDependencies; i++) {
+        PBldAppendToProjectArray(&project->dependencies, dependencies[i]);
+    }
+}
+
 void PBldAddPublicHeader(BldProject *project, ...)
 {
     va_list ap;
@@ -134,6 +156,13 @@ void PBldAddPublicHeader(BldProject *project, ...)
     }
 
     va_end(ap);
+}
+
+void BldAddPublicHeaderArray(BldProject *project, char **publicHeaders, size_t nPublicHeaders)
+{
+    for (size_t i = 0; i < nPublicHeaders; i++) {
+        PBldAppendToStringArray(&project->publicHeaders, publicHeaders[i]);
+    }
 }
 
 void BldSetLinkerScript(BldProject *project, char *linkerScript)
