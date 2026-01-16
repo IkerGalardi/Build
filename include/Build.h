@@ -47,9 +47,6 @@ void PBldAddDefines(BldProject *project, ...);
 
 void BldAddDefinesArray(BldProject *project, char **defines, size_t nDefines);
 
-#define BldAddDependencies(project, ...) PBldAddDependencies(project, __VA_ARGS__, NULL)
-void PBldAddDependencies(BldProject *project, ...);
-
 #define BldAddPublicHeader(project, ...) PBldAddPublicHeader(project, __VA_ARGS__, NULL)
 void PBldAddPublicHeader(BldProject *project, ...);
 
