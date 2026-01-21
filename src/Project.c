@@ -72,6 +72,13 @@ void PBldAddSources(BldProject *project,
     va_end(ap);
 }
 
+void PBldAddSourceArray(BldProject *project, char **sources, size_t nSources)
+{
+    for (size_t i = 0; i < nSources; i++) {
+        PBldAppendToStringArray(&project->sources, sources[i]);
+    }
+}
+
 void PBldAddIncludePaths(BldProject *project,
                          ...)
 {

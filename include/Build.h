@@ -32,6 +32,8 @@ BldProject *BldNewProject(char *projectName,
 #define BldAddSources(project, ...) PBldAddSources(project, __VA_ARGS__, NULL)
 void PBldAddSources(BldProject *project, ...);
 
+void PBldAddSourceArray(BldProject *project, char **sources, size_t nSources);
+
 #define BldAddIncludePaths(project, ...) PBldAddIncludePaths(project, __VA_ARGS__, NULL)
 void PBldAddIncludePaths(BldProject *project, ...);
 
