@@ -2,6 +2,7 @@
 #define BUILD_H
 
 #include <stdbool.h>
+#include <stdarg.h>
 #include <stdlib.h>
 
 typedef enum
@@ -34,25 +35,35 @@ void PBldAddSources(BldProject *project, ...);
 
 void PBldAddSourceArray(BldProject *project, char **sources, size_t nSources);
 
+void BldAddSourceVA(BldProject *project, va_list ap);
+
 #define BldAddIncludePaths(project, ...) PBldAddIncludePaths(project, __VA_ARGS__, NULL)
 void PBldAddIncludePaths(BldProject *project, ...);
 
 void BldAddIncludePathArray(BldProject *project, char **includes, size_t nIncludes);
+
+void BldAddIncludePathVA(BldProject *project, va_list ap);
 
 #define BldAddDependencies(project, ...) PBldAddDependencies(project, __VA_ARGS__, NULL)
 void PBldAddDependencies(BldProject *project, ...);
 
 void BldAddDependencyArray(BldProject *project, BldProject **dependencies, size_t nDependencies);
 
+void BldAddDependencyVA(BldProject *project, va_list ap);
+
 #define BldAddDefines(project, ...) PBldAddDefines(project, __VA_ARGS__, NULL)
 void PBldAddDefines(BldProject *project, ...);
 
 void BldAddDefinesArray(BldProject *project, char **defines, size_t nDefines);
 
+void BldAddDefinesVA(BldProject *project, va_list ap);
+
 #define BldAddPublicHeader(project, ...) PBldAddPublicHeader(project, __VA_ARGS__, NULL)
 void PBldAddPublicHeader(BldProject *project, ...);
 
 void BldAddPublicHeaderArray(BldProject *project, char **publicHeaders, size_t nPublicHeaders);
+
+void BldAddPublicHeaderVA(BldProject *project, va_list ap);
 
 void BldSetLinkerScript(BldProject *project, char *linkerScript);
 

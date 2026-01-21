@@ -58,6 +58,20 @@ void PBldAddSources(BldProject *project,
 
     assert(project != NULL);
 
+    BldAddSourceVA(project, ap);
+
+    va_end(ap);
+}
+
+void PBldAddSourceArray(BldProject *project, char **sources, size_t nSources)
+{
+    for (size_t i = 0; i < nSources; i++) {
+        PBldAppendToStringArray(&project->sources, sources[i]);
+    }
+}
+
+void BldAddSourceVA(BldProject *project, va_list ap)
+{
     char *source = va_arg(ap, char *);
     while (source != NULL) {
         FILE *sourceFile = fopen(source, "r");
@@ -69,14 +83,6 @@ void PBldAddSources(BldProject *project,
         PBldAppendToStringArray(&project->sources, source);
         source = va_arg(ap, char *);
     }
-    va_end(ap);
-}
-
-void PBldAddSourceArray(BldProject *project, char **sources, size_t nSources)
-{
-    for (size_t i = 0; i < nSources; i++) {
-        PBldAppendToStringArray(&project->sources, sources[i]);
-    }
 }
 
 void PBldAddIncludePaths(BldProject *project,
@@ -87,11 +93,8 @@ void PBldAddIncludePaths(BldProject *project,
 
     assert(project != NULL);
 
-    char *includePath = va_arg(ap, char *);
-    while (includePath != NULL) {
-        PBldAppendToStringArray(&project->includePaths, includePath);
-        includePath = va_arg(ap, char *);
-    }
+    BldAddSourceVA(project, ap);
+
     va_end(ap);
 }
 
@@ -102,6 +105,15 @@ void BldAddIncludePathArray(BldProject *project, char **includes, size_t nInclud
     }
 }
 
+void BldAddIncludePathVA(BldProject *project, va_list ap)
+{
+    char *includePath = va_arg(ap, char *);
+    while (includePath != NULL) {
+        PBldAppendToStringArray(&project->includePaths, includePath);
+        includePath = va_arg(ap, char *);
+    }
+}
+
 void PBldAddDefines(BldProject *project, ...)
 {
     va_list ap;
@@ -109,11 +121,7 @@ void PBldAddDefines(BldProject *project, ...)
 
     assert(project != NULL);
 
-    char *define = va_arg(ap, char *);
-    while (define != NULL) {
-        PBldAppendToStringArray(&project->defines, define);
-        define = va_arg(ap, char *);
-    }
+    BldAddDefinesVA(project, ap);
 
     va_end(ap);
 }
@@ -125,6 +133,15 @@ void BldAddDefinesArray(BldProject *project, char **defines, size_t nDefines)
     }
 }
 
+void BldAddDefinesVA(BldProject *project, va_list ap)
+{
+    char *define = va_arg(ap, char *);
+    while (define != NULL) {
+        PBldAppendToStringArray(&project->defines, define);
+        define = va_arg(ap, char *);
+    }
+}
+
 void PBldAddDependencies(BldProject *project, ...)
 {
     va_list ap;
@@ -132,11 +149,7 @@ void PBldAddDependencies(BldProject *project, ...)
 
     assert(project != NULL);
 
-    BldProject *dependency = va_arg(ap, BldProject *);
-    while (dependency != NULL) {
-        PBldAppendToProjectArray(&project->dependencies, dependency);
-        dependency = va_arg(ap, BldProject *);
-    }
+    BldAddDependencyVA(project, ap);
 
     va_end(ap);
 }
@@ -149,6 +162,15 @@ void BldAddDependencyArray(BldProject *project,
     }
 }
 
+void BldAddDependencyVA(BldProject *project, va_list ap)
+{
+    BldProject *dependency = va_arg(ap, BldProject *);
+    while (dependency != NULL) {
+        PBldAppendToProjectArray(&project->dependencies, dependency);
+        dependency = va_arg(ap, BldProject *);
+    }
+}
+
 void PBldAddPublicHeader(BldProject *project, ...)
 {
     va_list ap;
@@ -156,11 +178,7 @@ void PBldAddPublicHeader(BldProject *project, ...)
 
     assert(project != NULL);
 
-    char *publicHeader = va_arg(ap, char *);
-    while (publicHeader != NULL) {
-        PBldAppendToStringArray(&project->publicHeaders, publicHeader);
-        publicHeader = va_arg(ap, char *);
-    }
+    BldAddPublicHeaderVA(project, ap);
 
     va_end(ap);
 }
@@ -169,6 +187,15 @@ void BldAddPublicHeaderArray(BldProject *project, char **publicHeaders, size_t n
 {
     for (size_t i = 0; i < nPublicHeaders; i++) {
         PBldAppendToStringArray(&project->publicHeaders, publicHeaders[i]);
+    }
+}
+
+void BldAddPublicHeaderVA(BldProject *project, va_list ap)
+{
+    char *publicHeader = va_arg(ap, char *);
+    while (publicHeader != NULL) {
+        PBldAppendToStringArray(&project->publicHeaders, publicHeader);
+        publicHeader = va_arg(ap, char *);
     }
 }
 
